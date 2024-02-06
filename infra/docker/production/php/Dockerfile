@@ -1,5 +1,5 @@
 # あくまでサンプルなのでプロジェクトに合わせてカスタマイズしてね.
-FROM php:8.1-fpm-bullseye
+FROM php:8.2-fpm
 SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
 
 ENV TZ='Asia/Tokyo'\
@@ -18,12 +18,15 @@ RUN apt-get update && \
   composer config -g process-timeout 3600 && \
   composer config -g repos.packagist composer https://packagist.org
 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs
+
 COPY ./infra/docker/production/php/php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./infra/docker/production/php/php.ini /usr/local/etc/php/php.ini
 COPY ./laravel /work/laravel
 
 # こことか特にプロジェクトごとに違うと思う.
-COPY ./.env.production /work/laravel/.env
+COPY ./laravel/.env /work/laravel/.env
 
 WORKDIR /work/laravel
 
