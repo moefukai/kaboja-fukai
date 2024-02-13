@@ -7,6 +7,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TwitterController;
 use App\Http\Controllers\TwitterTestController;
 use App\Http\Controllers\NoticeConfirmationController;
+use App\Http\Controllers\MenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,12 +34,16 @@ Route::middleware(['auth'])->group(function () {
 // Notice
 Route::get('/notice', [NoticeController::class, 'create'])->name('notice.create');
 Route::post('/notice', [NoticeController::class, 'store'])->name('notice.store');
-Route::get('/notice-confirmation/{id}', [NoticeConfirmationController::class, 'show'])->name('notice.confirmation.show');
+Route::get('/notice/confirm/{id}', [NoticeController::class, 'show'])->name('notice.confirm');
 Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice.edit');
 
 // Shop
 Route::get('/shop', [ShopController::class, 'create'])->name('shops.create');
 Route::post('/shop', [ShopController::class, 'store'])->name('shops.store');
+Route::get('/shop/confirm', [ShopController::class, 'confirm'])->name('shops.confirm');
+//Route::get('/shop/edit/{shop}', [ShopController::class, 'edit'])->name('shops.edit');
+//Route::get('/shop/confirm/{shop}', [ShopController::class, 'confirm'])->name('shops.confirm');
+//Route::post('/shop/update/{shop}', [ShopController::class, 'update'])->name('shops.update');
 
 // Twitterに投稿するルート
 Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');
@@ -49,9 +54,6 @@ Route::get('/twitter-test', function () {
 });
 Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
 //Route::post('/twitter/post-tweet', [TwitterTestController::class, 'postTweet'])->name('twitter.postTweet');
-
-
-
 
 // Auth routes
 require __DIR__.'/auth.php';

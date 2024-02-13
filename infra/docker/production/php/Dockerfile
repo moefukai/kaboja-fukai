@@ -1,5 +1,5 @@
 # あくまでサンプルなのでプロジェクトに合わせてカスタマイズしてね.
-FROM php:8.2-fpm
+FROM php:8.2-fpm-bullseye
 SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
 
 ENV TZ='Asia/Tokyo'\
