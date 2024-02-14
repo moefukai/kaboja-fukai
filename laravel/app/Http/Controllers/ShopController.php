@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\Menu;
 use App\Models\Option;
+use Illuminate\Support\Facades\Log;
 
 class ShopController extends Controller
 {
     public function create()
     {
-        return view('shop.form');
+        $menus = Menu::all();
+        return view('shop.form', compact('menus'));
     }
     public function store(Request $request)
     {
+        Log::debug('Current user ID: ' . auth()->id());
         // 店舗情報
         $validatedShopData = $request->validate([
             'name' => 'required|max:255',
@@ -30,13 +33,21 @@ class ShopController extends Controller
         for ($i = 1; $i <= 3; $i++) {
             $menuName = $request->input("menu{$i}");
             $menuPrice = $request->input("menu{$i}-price");
+            $toppings = $request->input("menu{$i}-toppings", []); // トッピング情報を配列で受け取る
+
             if ($menuName && $menuPrice) {
-                $shop->menus()->create([
+                $menu = $shop->menus()->create([
                     'name' => $menuName,
                     'price' => $menuPrice,
                 ]);
+
+                // トッピング情報を保存
+                foreach ($toppings as $toppingId) {
+                    $menu->toppings()->attach($toppingId); // menu_toppings テーブルにレコードを追加
+                }
             }
         }
+
         //  オプション
         for ($i = 1; $i <= 3; $i++) {
             $optionName = $request->input("option{$i}");
@@ -50,7 +61,7 @@ class ShopController extends Controller
         }
 
         // 保存後のリダイレクトなどの処理
-        return redirect()->route('shop.confirm'); // 成功時のリダイレクト先を指定
+        return redirect()->route('shops.confirm'); // 成功時のリダイレクト先を指定
     }
     public function confirm()
     {

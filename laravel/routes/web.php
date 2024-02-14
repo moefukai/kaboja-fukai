@@ -40,6 +40,7 @@ Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice
 // Shop
 Route::get('/shop', [ShopController::class, 'create'])->name('shops.create');
 Route::post('/shop', [ShopController::class, 'store'])->name('shops.store');
+Route::post('/menus/store', [MenuController::class, 'store'])->name('menus.store');
 Route::get('/shop/confirm', [ShopController::class, 'confirm'])->name('shops.confirm');
 //Route::get('/shop/edit/{shop}', [ShopController::class, 'edit'])->name('shops.edit');
 //Route::get('/shop/confirm/{shop}', [ShopController::class, 'confirm'])->name('shops.confirm');
