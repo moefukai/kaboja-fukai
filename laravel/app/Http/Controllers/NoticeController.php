@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use App\Models\Notice;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,8 +12,8 @@ class NoticeController extends Controller
 {
     public function create()
     {
-        // notice.createは通知作成フォームのビューファイル名に合わせて調整してください
-        return view('notice.form');
+        $menus = Menu::all();
+        return view('notice.form', compact('menus'));
     }
     public function store(Request $request)
     {

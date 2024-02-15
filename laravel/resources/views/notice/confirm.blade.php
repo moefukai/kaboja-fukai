@@ -1,5 +1,3 @@
-{{-- 確認画面ビュー --}}
-
 @extends('layouts.app')
 
 @section('content')
@@ -9,7 +7,7 @@
             <label>出店場所: {{ $notice->address }}</label>
         </div>
         <div>
-            <label>売れ残っているメニュー: {{ $notice->menu }}</label>
+            <label>メニュー: {{ $notice->menu }}</label>
         </div>
         <div>
             <label>値段: {{ $notice->price }}</label>

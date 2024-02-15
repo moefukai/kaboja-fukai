@@ -6,7 +6,6 @@ use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TwitterController;
 use App\Http\Controllers\TwitterTestController;
-use App\Http\Controllers\NoticeConfirmationController;
 use App\Http\Controllers\MenuController;
 
 /*
@@ -40,11 +39,15 @@ Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice
 // Shop
 Route::get('/shop', [ShopController::class, 'create'])->name('shops.create');
 Route::post('/shop', [ShopController::class, 'store'])->name('shops.store');
-Route::post('/menus/store', [MenuController::class, 'store'])->name('menus.store');
-Route::get('/shop/confirm', [ShopController::class, 'confirm'])->name('shops.confirm');
+Route::post('/shops/store', [ShopController::class, 'store'])->name('shops.store');
+Route::get('/shops/confirm', [ShopController::class, 'confirm'])->name('shops.confirm');
 //Route::get('/shop/edit/{shop}', [ShopController::class, 'edit'])->name('shops.edit');
 //Route::get('/shop/confirm/{shop}', [ShopController::class, 'confirm'])->name('shops.confirm');
 //Route::post('/shop/update/{shop}', [ShopController::class, 'update'])->name('shops.update');
+
+// Menu
+Route::get('/menus', [MenuController::class, 'index']);
+Route::get('/menus/{menu}/toppings', [MenuController::class, 'toppings']);
 
 // Twitterに投稿するルート
 Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');

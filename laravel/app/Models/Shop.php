@@ -9,16 +9,10 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'name', 'contact'];
+    protected $fillable = ['name', 'contact', 'user_id'];
 
     public function menus()
     {
         return $this->hasMany(Menu::class);
     }
-
-    public function options()
-    {
-        return $this->hasMany(Option::class);
-    }
-
 }

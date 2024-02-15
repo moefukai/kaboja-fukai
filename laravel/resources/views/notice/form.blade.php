@@ -9,14 +9,10 @@
                 <label for="address">出店場所</label>
                 <input type="text" class="form-control" id="address" name="address" placeholder="出店場所の住所を記入してください" required>
             </div>
-            <div class="form-group">
-                <label for="message">売れ残っているメニュー</label>
-                <select name="menu" class="form-control">
-                    @foreach ($menus as $menu)
-                        <option value="{{ $menu['id'] }}">{{ $menu['name'] }}（￥{{ number_format($menu['price']) }}）</option>
-                    @endforeach
-                </select>
+            <div id="menus-container">
+                <!-- デフォルトのメニュー選択セレクトボックスがここに追加されます -->
             </div>
+            <button type="button" id="add-menu-btn">メニューを追加</button>
             <div class="form-group">
                 <label for="start_time">販売開始時間</label>
                 <select class="form-control" id="start_time" name="start_time" required>
@@ -38,4 +34,7 @@
             <button type="submit" class="btn btn-primary">登録する</button>
         </form>
     </div>
+    @push('scripts')
+        <script src="{{ mix('js/notice-handler.js') }}"></script>
+    @endpush
 @endsection
