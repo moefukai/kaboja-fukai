@@ -21,29 +21,29 @@ class ShopController extends Controller
         $shop = Shop::create([
             'name' => $request->name,
             'contact' => $request->contact,
-            'user_id' => Auth::id(), // ログインユーザーのIDを取得
+            'user_id' => Auth::id(),
         ]);
 
         foreach ($request->menus as $menuData) {
-            Log::debug('Menu Name:', ['name' => $menuData['name']]);
-            Log::debug('Menu Price:', ['price' => $menuData['price']]);
+            $menuName = isset($menuData['name']) ? $menuData['name'] : null;
+            $menuPrice = isset($menuData['price']) ? $menuData['price'] : null;
             $menu = $shop->menus()->create([
-                'name' => $menuData['name'],
-                'price' => $menuData['price'],
+                'name' => $menuName,
+                'price' => $menuPrice,
             ]);
 
             if (isset($menuData['toppings'])) {
                 foreach ($menuData['toppings'] as $toppingData) {
-                    // トッピングデータの取得と保存
+                    $toppingName = isset($toppingData['name']) ? $toppingData['name'] : null;
+                    $toppingPrice = isset($toppingData['price']) ? $toppingData['price'] : null;
                     $topping = Topping::firstOrCreate([
-                        'name' => $toppingData['name'],
-                        'price' => $toppingData['price']
+                        'name' => $toppingName,
+                        'price' => $toppingPrice,
                     ]);
                     $menu->toppings()->attach($topping->id);
                 }
             }
         }
-
         return redirect()->route('shops.confirm');
     }
     public function confirm()

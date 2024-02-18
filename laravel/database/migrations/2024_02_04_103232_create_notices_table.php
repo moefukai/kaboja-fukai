@@ -14,12 +14,14 @@ class CreateNoticesTable extends Migration
     public function up()
     {
         Schema::create('notices', function (Blueprint $table) {
-            $table->id(); // お知らせID
+            $table->id(); // 通知ID
             $table->unsignedBigInteger('shop_id'); // 店舗ID
-            $table->text('message'); // お知らせメッセージ
-            $table->timestamps(); // created_at と updated_at
+            $table->string('address'); // 住所
+            $table->dateTime('start_time'); // 開始時間
+            $table->dateTime('end_time'); // 終了時間
+            $table->timestamps(); // タイムスタンプ（created_at および updated_at）
 
-            // 外部キー制約
+            // 外部キーとして shop_id を設定
             $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
         });
     }

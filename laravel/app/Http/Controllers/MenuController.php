@@ -14,22 +14,17 @@ class MenuController extends Controller
         $shop = auth()->user()->shop;
 
         foreach ($request->menus as $menuData) {
-            // メニューデータを保存
             $menu = Menu::create([
                 'name' => $menuData['name'],
                 'price' => $menuData['price'],
-                'shop_id' => $shop->id, // $shopは事前に定義されているものとします
+                'shop_id' => $shop->id,
             ]);
-
-            // トッピングデータが存在する場合は処理
             if (isset($menuData['toppings'])) {
                 foreach ($menuData['toppings'] as $toppingData) {
-                    // トッピングデータの保存
                     $topping = Topping::firstOrCreate([
                         'name' => $toppingData['name'],
                         'price' => $toppingData['price'],
                     ]);
-                    // メニューとトッピングの関連付け
                     $menu->toppings()->attach($topping->id);
                 }
             }
@@ -42,11 +37,9 @@ class MenuController extends Controller
         $menus = Menu::all();
         return response()->json($menus);
     }
-
-    // 特定メニューのトッピングを取得
     public function toppings(Menu $menu)
     {
-        $toppings = $menu->toppings; // 仮定：Menuモデルにtoppingsリレーションが定義されている
+        $toppings = $menu->toppings;
         return response()->json($toppings);
     }
 

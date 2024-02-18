@@ -9,17 +9,6 @@ class Menu extends Model
 {
     use HasFactory;
 
-//    protected $fillable = ['name', 'price'];
-//
-//    public function shop()
-//    {
-//        return $this->belongsTo(Shop::class);
-//    }
-//    public function toppings()
-//    {
-//        return $this->belongsToMany(Topping::class);
-//    }
-
     protected $fillable = ['name', 'price', 'shop_id'];
 
     public function toppings()

@@ -5,6 +5,7 @@
         <h1>お知らせ作成</h1>
         <form action="{{ route('notice.store') }}" method="post">
             @csrf
+            <input type="hidden" name="shop_id" value="{{ $shop->id }}">
             <div class="form-group">
                 <label for="address">出店場所</label>
                 <input type="text" class="form-control" id="address" name="address" placeholder="出店場所の住所を記入してください" required>
@@ -31,7 +32,7 @@
                     @endfor
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">登録する</button>
+            <button type="submit" class="btn btn-primary" id="submit-form">登録する</button>
         </form>
     </div>
     @push('scripts')

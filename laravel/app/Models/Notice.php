@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notice extends Model
 {
-    protected $fillable = ['address', 'menu', 'price', 'start_time', 'end_time'];
+    protected $fillable = ['shop_id', 'address', 'start_time', 'end_time'];
 
     public function shop()
     {

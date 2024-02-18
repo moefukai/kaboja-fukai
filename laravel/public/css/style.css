@@ -49,3 +49,13 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #4cae4c;
 }
+
+.topping-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.topping-label {
+    margin-left: 8px;
+}

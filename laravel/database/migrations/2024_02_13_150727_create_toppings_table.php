@@ -15,8 +15,8 @@ class CreateToppingsTable extends Migration
     {
         Schema::create('toppings', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->decimal('price', 8, 2);
+            $table->string('name')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
             $table->timestamps();
         });
     }

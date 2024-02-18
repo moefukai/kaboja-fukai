@@ -55,6 +55,15 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('shops.create') }}">店舗情報登録</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('notice.create') }}">お知らせ作成</a>
+                            </li>
+                            <li class="nav-item">
+                                <a>オーダー確認</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -84,5 +93,4 @@
     </div>
     @stack('scripts')
 </body>
-@stack('scripts')
 </html>
