@@ -7,6 +7,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\TwitterController;
 use App\Http\Controllers\TwitterTestController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,13 @@ Route::get('/twitter-test', function () {
 });
 Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
 //Route::post('/twitter/post-tweet', [TwitterTestController::class, 'postTweet'])->name('twitter.postTweet');
+
+//Order
+Route::get('/order/main/{shop_id}', [OrderController::class, 'create'])->name('order.main');
+Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'show'])->name('order.detail.show');
+Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
+Route::get('/order/confirm/{orderId}', [OrderController::class, 'confirm'])->name('order.confirm');
+Route::get('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
 
 // Auth routes
 require __DIR__.'/auth.php';
