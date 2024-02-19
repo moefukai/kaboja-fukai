@@ -120,17 +120,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log(`メニュー${index + 1}:`, { menuId, discount });
             // const toppings = Array.from(document.querySelectorAll(`.toppings-container[data-menu-id="${menuId}"] .topping-checkbox:checked`)).map(checkbox => checkbox.value);
             // console.log(`トッピング${index + 1}:`, toppings);
-
             // menus.push({ menuId, discount, toppings });
             menus.push({ menuId, discount });
 
         });
         console.log('menus:', menus);
-        // .menu-selectにマッチするすべての要素を取得し、ログに出力
         const menuSelects = document.querySelectorAll('.menu-select');
         console.log('menu-select要素:', menuSelects);
-
-        // 各要素の値もログに出力してみる
         menuSelects.forEach((select, index) => {
             console.log(`メニュー${index + 1}の値:`, select.value);
         });

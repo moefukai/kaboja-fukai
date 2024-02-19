@@ -33,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
 // Notice
 Route::get('/notice', [NoticeController::class, 'create'])->name('notice.create');
 Route::post('/notice', [NoticeController::class, 'store'])->name('notice.store');
-Route::get('/notice/confirm/{id}', [NoticeController::class, 'show'])->name('notice.confirm');
+Route::get('/notice/confirm', [NoticeController::class, 'show'])->name('notice.confirm');
 Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice.edit');
 
 // Shop

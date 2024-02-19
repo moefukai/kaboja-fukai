@@ -32,14 +32,9 @@ class NoticeController extends Controller
         DB::beginTransaction();
 
         try {
-            // 日時のフォーマット変換
             $start_time = Carbon::createFromFormat('H:i', $request->start_time)->format('Y-m-d H:i:s');
             $end_time = Carbon::createFromFormat('H:i', $request->end_time)->format('Y-m-d H:i:s');
-
-            // 店舗情報の取得
             $shop = Shop::where('user_id', Auth::id())->firstOrFail();
-
-            // 通知情報の保存
             $notice = Notice::create([
                 'shop_id' => $shop->id,
                 'address' => $request->address,
@@ -49,8 +44,6 @@ class NoticeController extends Controller
 
             $data = json_decode($request->getContent(), true);
             $menusData = $data['menus'] ?? null;
-//            // メニュー情報の保存
-//            $menusData = json_decode($request->input('menus'), true);
 
             if (is_array($menusData) && !empty($menusData)) {
                 foreach ($menusData as $menuData) {
@@ -59,8 +52,6 @@ class NoticeController extends Controller
                         'menu_id' => $menuData['menuId'],
                         'discount' => $menuData['discount'],
                     ]);
-
-                    // トッピング情報の保存
                     if (!empty($menuData['toppings'])) {
                         foreach ($menuData['toppings'] as $toppingId) {
                             NoticeTopping::create([
@@ -71,7 +62,6 @@ class NoticeController extends Controller
                     }
                 }
             } else {
-                // $menusData が配列ではない、または空の場合のエラー処理
                 Log::error('Menus data is not an array or is empty.');
                 return response()->json(['error' => 'Invalid menus data provided.'], 400);
             }
@@ -85,9 +75,23 @@ class NoticeController extends Controller
         }
     }
 
-    public function confirm()
+    public function show()
     {
-        return view('notice.confirm');
+        $userId = Auth::id();
+        $shop = Shop::where('user_id', $userId)->firstOrFail();
+        $notice = Notice::where('shop_id', $shop->id)->latest()->firstOrFail();
+        $noticeMenus = NoticeMenu::with('menu')->where('notice_id', $notice->id)->get();
+        foreach ($noticeMenus as $noticeMenu) {
+            $toppings = NoticeTopping::with('topping')
+                ->where('notice_menu_id', $noticeMenu->id)
+                ->get()
+                ->pluck('topping')
+                ->pluck('name', 'id');
+            $noticeMenu->menu->toppings = $toppings;
+        }
+        $start_time = Carbon::parse($notice->start_time)->format('H:i');
+        $end_time = Carbon::parse($notice->end_time)->format('H:i');
+        return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time'));
     }
 
     public function edit($id)
