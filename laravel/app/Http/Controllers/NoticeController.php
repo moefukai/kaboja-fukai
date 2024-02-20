@@ -67,7 +67,7 @@ class NoticeController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Notice created successfully']);
+            return response()->json(['redirect_url' => route('notice.confirm', ['id' => $notice->id])]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
@@ -75,12 +75,18 @@ class NoticeController extends Controller
         }
     }
 
-    public function show()
+    public function show($id)
     {
-        $userId = Auth::id();
-        $shop = Shop::where('user_id', $userId)->firstOrFail();
-        $notice = Notice::where('shop_id', $shop->id)->latest()->firstOrFail();
+        // URLから渡されたidを使用してNoticeを取得
+        $notice = Notice::findOrFail($id);
+
+        // Noticeに紐付けられたShopを取得
+        $shop = Shop::findOrFail($notice->shop_id);
+
+        // Noticeに紐付けられたNoticeMenusとそれに紐づくMenusを取得
         $noticeMenus = NoticeMenu::with('menu')->where('notice_id', $notice->id)->get();
+
+        // 各NoticeMenuに対して関連するToppingsを取得してセット
         foreach ($noticeMenus as $noticeMenu) {
             $toppings = NoticeTopping::with('topping')
                 ->where('notice_menu_id', $noticeMenu->id)
@@ -89,8 +95,12 @@ class NoticeController extends Controller
                 ->pluck('name', 'id');
             $noticeMenu->menu->toppings = $toppings;
         }
+
+        // Noticeの開始時間と終了時間をフォーマット
         $start_time = Carbon::parse($notice->start_time)->format('H:i');
         $end_time = Carbon::parse($notice->end_time)->format('H:i');
+
+        // ビューにデータを渡して表示
         return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time'));
     }
 

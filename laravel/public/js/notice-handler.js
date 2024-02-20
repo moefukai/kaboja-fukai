@@ -175,7 +175,6 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     });
                     // const toppings = Array.from(document.querySelectorAll(`.toppings-container[data-menu-id="${menuId}"] .topping-checkbox:checked`)).map(checkbox => checkbox.value);
                     // console.log(`トッピング${index + 1}:`, toppings);
-
                     // menus.push({ menuId, discount, toppings });
                     menus.push({
                       menuId: menuId,
@@ -183,11 +182,8 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     });
                   });
                   console.log('menus:', menus);
-                  // .menu-selectにマッチするすべての要素を取得し、ログに出力
                   menuSelects = document.querySelectorAll('.menu-select');
                   console.log('menu-select要素:', menuSelects);
-
-                  // 各要素の値もログに出力してみる
                   menuSelects.forEach(function (select, index) {
                     console.log("\u30E1\u30CB\u30E5\u30FC".concat(index + 1, "\u306E\u5024:"), select.value);
                   });
@@ -222,17 +218,20 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                 case 23:
                   result = _context.sent;
                   console.log('送信結果:', result);
-                  _context.next = 30;
+                  if (result.redirect_url) {
+                    window.location.href = result.redirect_url;
+                  }
+                  _context.next = 31;
                   break;
-                case 27:
-                  _context.prev = 27;
+                case 28:
+                  _context.prev = 28;
                   _context.t0 = _context["catch"](14);
                   console.error('Error:', _context.t0);
-                case 30:
+                case 31:
                 case "end":
                   return _context.stop();
               }
-            }, _callee, null, [[14, 27]]);
+            }, _callee, null, [[14, 28]]);
           }));
           return function (_x) {
             return _ref2.apply(this, arguments);

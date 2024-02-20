@@ -10,7 +10,17 @@ class TwitterTestController extends Controller
 {
     public function postTweet(Request $request)
     {
+        $menus = $request->input('menus', []); // デフォルト値として空の配列を使用
+        $tweetText = "【通知】" . $request->input('shop_name') . "\n" .
+            "出店場所: " . $request->input('address') . "\n";
 
+        foreach ($menus as $menu) {
+            $tweetText .= "メニュー: " . $menu['name'] . "\n" .
+                "価格: ¥" . number_format($menu['price']) . "\n" .
+                "値引き後の値段: ¥" . number_format($menu['price'] - $menu['discount']) . "\n";
+        }
+        $tweetText .= "販売時間:" . $request->input('start_time') . " - " . $request->input('end_time');
+        // TwitterOAuthの初期化
         $twitter = new TwitterOAuth(
             env('TWITTER_API_KEY'),
             env('TWITTER_API_SECRET'),
@@ -19,31 +29,15 @@ class TwitterTestController extends Controller
         );
 
         $twitter->setApiVersion('2');
-        $response = $twitter->post('tweets', ['text' => '本日のテスト'], true);
+        // ツイートの投稿
+        $response = $twitter->post('tweets', ['text' => $tweetText], true);
 
         $httpCode = $twitter->getLastHttpCode();
-        $responseBody = json_decode(json_encode($response), true); // 応答を配列に変換
-
-        if ($httpCode == 200) {
-            // ツイート成功
-            Log::info('Tweet posted successfully.', ['response' => $responseBody]);
-        } else {
-            // ツイート失敗
-            Log::error('Tweet failed to post.', [
-                'http_code' => $httpCode, // HTTPステータスコード
-                'response' => $responseBody // 応答本体
-            ]);
-
-            // エラーメッセージがある場合はそれを特定する
-            if (isset($responseBody['errors'])) {
-                foreach ($responseBody['errors'] as $error) {
-                    Log::error('Twitter API error', [
-                        'code' => $error['code'], // エラーコード
-                        'message' => $error['message'] // エラーメッセージ
-                    ]);
-                }
-            }
+        if ($httpCode != 200) {
+            Log::error('Tweet failed to post.', ['http_code' => $httpCode, 'response' => $response]);
+            return back()->with('error', 'Failed to post tweet.');
         }
+
         return back()->with('status', 'Tweet posted successfully.');
     }
 }

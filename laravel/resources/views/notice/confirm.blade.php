@@ -34,13 +34,18 @@
         <div>
             <label>支払い方法: {{ $shop->payment }}</label>
         </div>
-
         <!-- ここに投稿するボタンのコードを配置 -->
         <form action="{{ route('post.tweet') }}" method="post">
             @csrf
-            <input type="hidden" name="notice_id" value="{{ $notice->id }}">
+            <input type="hidden" name="shop_name" value="{{ $shop->name }}">
+            <input type="hidden" name="address" value="{{ $notice->address }}">
+            <div id="menuItemsContainer"></div>
+            <input type="hidden" name="start_time" value="{{ $start_time }}">
+            <input type="hidden" name="end_time" value="{{ $end_time }}">
             <button type="submit" class="btn btn-primary">Twitterに投稿する</button>
         </form>
     </div>
+    <script id="menuItemsData" type="application/json">@json($noticeMenus)</script>
+    <script src="{{ asset('js/menuItems.js') }}"></script>
 @endsection
 

@@ -131,7 +131,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log(`メニュー${index + 1}の値:`, select.value);
         });
 
-
         const data = {
             address,
             start_time: startTime,
@@ -158,6 +157,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             const result = await response.json();
             console.log('送信結果:', result);
+
+            if (result.redirect_url) {
+                window.location.href = result.redirect_url;
+            }
         } catch (error) {
             console.error('Error:', error);
         }

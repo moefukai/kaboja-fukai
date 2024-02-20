@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
 // Notice
 Route::get('/notice', [NoticeController::class, 'create'])->name('notice.create');
 Route::post('/notice', [NoticeController::class, 'store'])->name('notice.store');
-Route::get('/notice/confirm', [NoticeController::class, 'show'])->name('notice.confirm');
+Route::get('/notice/confirm/{id}', [NoticeController::class, 'show'])->name('notice.confirm');
 Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice.edit');
 
 // Shop
@@ -50,15 +50,16 @@ Route::get('/shop/confirm', [ShopController::class, 'confirm'])->name('shops.con
 Route::get('/menus', [MenuController::class, 'index']);
 Route::get('/menus/{menu}/toppings', [MenuController::class, 'toppings']);
 
-// Twitterに投稿するルート
-Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');
+//// Twitterに投稿するルート
+//Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');
 
 // テスト投稿フォームを表示するためのルート
 Route::get('/twitter-test', function () {
     return view('twitter.twitter-test');
 });
 Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
-//Route::post('/twitter/post-tweet', [TwitterTestController::class, 'postTweet'])->name('twitter.postTweet');
+Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('post.tweet');
+
 
 //Order
 Route::get('/order/main/{shop_id}', [OrderController::class, 'create'])->name('order.main');
