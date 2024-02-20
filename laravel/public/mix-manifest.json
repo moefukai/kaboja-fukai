@@ -4,5 +4,7 @@
     "/js/menu-handler.js": "/js/menu-handler.js",
     "/js/notice-handler.js": "/js/notice-handler.js",
     "/js/menuItems.js": "/js/menuItems.js",
+    "/js/payment.js": "/js/payment.js",
+    "/js/option.js": "/js/option.js",
     "/css/app.css": "/css/app.css"
 }

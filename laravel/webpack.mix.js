@@ -16,6 +16,8 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/menu-handler.js', 'public/js')
     .js('resources/js/notice-handler.js', 'public/js')
     .js('resources/js/menuItems.js', 'public/js')
+    .js('resources/js/payment.js', 'public/js')
+    .js('resources/js/option.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
 

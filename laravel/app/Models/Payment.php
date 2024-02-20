@@ -2,15 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Option extends Model
+class Payment extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['name', 'price', 'shop_id'];
-
+    protected $fillable = ['shop_id', 'payment'];
     public function shop()
     {
         return $this->belongsTo(Shop::class);

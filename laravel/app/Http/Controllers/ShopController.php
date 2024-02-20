@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use App\Models\Menu;
 use App\Models\Topping;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -41,6 +42,28 @@ class ShopController extends Controller
                         'price' => $toppingPrice,
                     ]);
                     $menu->toppings()->attach($topping->id);
+                }
+            }
+        }
+        if (!empty($request->paymentMethods)) {
+            foreach ($request->paymentMethods as $paymentMethod) {
+                if (!empty($paymentMethod)) {
+                    Payment::create([
+                        'shop_id' => $shop->id,
+                        'payment' => $paymentMethod,
+                    ]);
+                }
+            }
+        }
+        if (!empty($request->options)) {
+            foreach ($request->options as $optionData) {
+                $optionName = $optionData['name'] ?? null;
+                $optionPrice = $optionData['price'] ?? null;
+                if (!empty($optionName) && !is_null($optionPrice)) {
+                    $shop->options()->create([
+                        'name' => $optionName,
+                        'price' => $optionPrice,
+                    ]);
                 }
             }
         }

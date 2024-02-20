@@ -16,7 +16,7 @@ class OrderController extends Controller
         $latestNotice = Notice::where('shop_id', $shopId)->latest('created_at')->first();
 
         if (!$latestNotice) {
-            return view('main', ['noticeMenus' => collect()]);
+            return view('order.main', ['noticeMenus' => collect()]);
         }
         $noticeMenus = NoticeMenu::with('menu')
             ->where('notice_id', $latestNotice->id)
