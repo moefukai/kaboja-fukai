@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log("イベントリスナーです")
     const menusContainer = document.getElementById('menus-container');
     const addMenuBtn = document.getElementById('add-menu-btn');
     const submitButton = document.getElementById('submit-form');
@@ -12,22 +11,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         return await response.json();
     }
 
-    // async function fetchToppings(menuId) {
-    //     const response = await fetch(`/menus/${menuId}/toppings`);
-    //     if (!response.ok) {
-    //         throw new Error('Toppings fetching failed.');
-    //     }
-    //     return await response.json();
-    // }
-
     async function addMenuSelect() {
+        const menuDiv = document.createElement('div');
         const menuLabel = document.createElement('label');
         menuLabel.textContent = 'メニュー';
-        menusContainer.appendChild(menuLabel);
+        menuDiv.appendChild(menuLabel);
 
         const menuSelect = document.createElement('select');
         menuSelect.classList.add('form-control', 'mb-2', 'menu-select');
-        menusContainer.appendChild(menuSelect);
+        menuDiv.appendChild(menuSelect);
 
         const discountContainer = document.createElement('div');
         const discountLabel = document.createElement('label');
@@ -35,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         discountContainer.appendChild(discountLabel);
 
         const discountSelect = document.createElement('select');
-        discountSelect.classList.add('form-control', 'mb-2');
+        discountSelect.classList.add('form-control', 'mb-2', 'discount-select');
         for (let i = 0; i <= 200; i += 10) {
             const option = document.createElement('option');
             option.value = i;
@@ -43,10 +35,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             discountSelect.appendChild(option);
         }
         discountContainer.appendChild(discountSelect);
-        menusContainer.appendChild(discountContainer);
+        menuDiv.appendChild(discountContainer);
 
-        // const toppingsContainer = document.createElement('div');
-        // menusContainer.appendChild(toppingsContainer);
+        menusContainer.appendChild(menuDiv);
+
+        discountSelect.addEventListener('change', function() {
+            console.log('選択された値引き額:', this.value);
+        });
 
         const menus = await fetchMenus();
         menus.forEach(menu => {
@@ -55,80 +50,24 @@ document.addEventListener('DOMContentLoaded', async function() {
             option.textContent = `${menu.name}（${Math.floor(menu.price)}円）`;
             menuSelect.appendChild(option);
         });
-
-        // menuSelect.addEventListener('change', async () => {
-        //     const menuId = menuSelect.value;
-        //     console.log("選択されたメニューID:", menuId);
-        //     // 既存のトッピングコンテナをクリア
-        //     while (toppingsContainer.firstChild) {
-        //         toppingsContainer.removeChild(toppingsContainer.firstChild);
-        //     }
-        //     toppingsContainer.setAttribute('data-menu-id', menuId);
-        //     if (!menuId) return;
-        //     try {
-        //         const toppings = await fetchToppings(menuId);
-        //         toppings.forEach(topping => {
-        //             const toppingContainer = document.createElement('div');
-        //             toppingContainer.classList.add('topping-container');
-        //
-        //             const checkbox = document.createElement('input');
-        //             checkbox.type = 'checkbox';
-        //             checkbox.name = `toppings[${menuId}][]`;
-        //             checkbox.value = topping.id;
-        //             checkbox.classList.add("topping-checkbox");
-        //
-        //             checkbox.addEventListener('change', function() {
-        //                 if (this.checked) {
-        //                     console.log(`チェックされました: ${topping.id}`);
-        //                 } else {
-        //                     console.log(`チェックが外されました: ${topping.id}`);
-        //                 }
-        //             });
-        //
-        //             const label = document.createElement('label');
-        //             label.classList.add('topping-label');
-        //             label.textContent = ` ${topping.name} (${Math.floor(topping.price)}円)`;
-        //
-        //             toppingContainer.appendChild(checkbox);
-        //             toppingContainer.appendChild(label);
-        //             toppingsContainer.appendChild(toppingContainer);
-        //         });
-        //     } catch (error) {
-        //         console.error(error.message);
-        //         toppingsContainer.innerHTML = 'トッピングの取得に失敗しました。';
-        //     }
-        // });
-        menuSelect.dispatchEvent(new Event('change'));
     }
 
     addMenuBtn.addEventListener('click', addMenuSelect);
 
     submitButton.addEventListener('click', async function(event) {
-        console.log('送信ボタンがクリックされました');
         event.preventDefault();
 
         const address = document.getElementById('address').value;
         const startTime = document.getElementById('start_time').value;
         const endTime = document.getElementById('end_time').value;
-        console.log('フォームの値:', { address, startTime, endTime });
 
-        const menus = [];
-        document.querySelectorAll('.menu-select').forEach((menuSelect, index) => {
-            const menuId = menuSelect.value;
-            const discountSelects = document.querySelectorAll('.discount-select');
-            const discount = discountSelects.length > index ? discountSelects[index].value : '0';
-            console.log(`メニュー${index + 1}:`, { menuId, discount });
-            // const toppings = Array.from(document.querySelectorAll(`.toppings-container[data-menu-id="${menuId}"] .topping-checkbox:checked`)).map(checkbox => checkbox.value);
-            // console.log(`トッピング${index + 1}:`, toppings);
-            // menus.push({ menuId, discount, toppings });
-            menus.push({ menuId, discount });
-
-        });
-        console.log('menus:', menus);
-        const menuSelects = document.querySelectorAll('.menu-select');
-        console.log('menu-select要素:', menuSelects);
-        menuSelects.forEach((select, index) => {
-            console.log(`メニュー${index + 1}の値:`, select.value);
+        // メニューセレクトボックスと値引き額セレクトボックスの組み合わせを取得してデータを作成
+        const menus = Array.from(document.querySelectorAll('.menu-select')).map((menuSelect, index) => {
+            const discountSelect = document.querySelectorAll('.discount-select')[index]; // 同じインデックスの値引き額セレクトボックスを取得
+            return {
+                menuId: menuSelect.value, // メニューID
+                discount: discountSelect ? discountSelect.value : '0' // 値引き額（未選択の場合は0を設定）
+            };
         });
 
         const data = {
@@ -137,8 +76,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             end_time: endTime,
             menus
         };
-        console.log("送信データ:", JSON.stringify(data));
-
 
         try {
             const response = await fetch('/notice', {
@@ -149,15 +86,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 },
                 body: JSON.stringify(data)
             });
-            console.log('送信試行');
 
             if (!response.ok) {
                 throw new Error('Server response was not OK');
             }
 
             const result = await response.json();
-            console.log('送信結果:', result);
-
             if (result.redirect_url) {
                 window.location.href = result.redirect_url;
             }

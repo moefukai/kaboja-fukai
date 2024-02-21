@@ -31,9 +31,9 @@
         <div>
             <label>販売終了時間: {{ $end_time }}</label>
         </div>
-        <div>
-            <label>支払い方法: {{ $shop->payment }}</label>
-        </div>
+{{--        <div>--}}
+{{--            <label>支払い方法: {{ $shop->payment }}</label>--}}
+{{--        </div>--}}
         <!-- ここに投稿するボタンのコードを配置 -->
         <form action="{{ route('post.tweet') }}" method="post">
             @csrf

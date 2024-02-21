@@ -2,34 +2,32 @@
 
 @section('content')
     <div class="container">
-        <h1>注文詳細</h1>
         <form action="{{ route('order.store') }}" method="POST">
             @csrf
             <h1>注文詳細</h1>
             <div>
                 <p>メニュー名: {{ $noticeMenu->menu->name }}</p>
-                <p>基本価格: ¥{{ number_format($noticeMenu->menu->price) }}</p>
-                <p>値引き: ¥{{ number_format($noticeMenu->discount) }}</p>
-                <p>値引き後の価格: ¥{{ number_format($discountedPrice) }}</p>
+                <p>基本価格: {{ number_format($noticeMenu->menu->price) }}円</p>
+                <p>値引き: {{ number_format($noticeMenu->discount) }}円</p>
+                <p>値引き後の価格: {{ number_format($discountedPrice) }}円</p>
             </div>
 
             <div class="form-group">
                 <label for="total_number">個数選択:</label>
-                <select name="total_number" id="total_number" class="form-control" onchange="updateTotalPrice()">
+                <select name="total_number" id="total_number" class="form-control">
                     @for ($i = 1; $i <= 10; $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
                     @endfor
                 </select>
             </div>
-
-            <div class="form-group">
-                <label for="topping">トッピング選択:</label>
-                <select name="topping" id="topping" class="form-control">
-                    @foreach ($toppings as $topping)
-                        <option value="{{ $topping->id }}" data-price="{{ $topping->price }}">{{ $topping->name }} (+¥{{ number_format($topping->price) }})</option>
-                    @endforeach
-                </select>
-            </div>
+            <div id="optionContainer"></div>
+            <template id="optionTemplate">
+                <div class="form-group option-group">
+                    <label class="option-label">オプション選択:</label>
+                    <div class="checkboxes">
+                    </div>
+                </div>
+            </template>
 
             <div class="form-group">
                 <label for="visiting">来店時間:</label>
@@ -60,6 +58,9 @@
         </form>
     </div>
 @endsection
-@section('scripts')
-    <script src="{{ asset('js/order.handler.js') }}"></script>
-@endsection
+@push('scripts')
+    <script src="{{ asset('js/order-handler.js') }}"></script>
+    <script>
+        const options = @json($options);
+    </script>
+@endpush

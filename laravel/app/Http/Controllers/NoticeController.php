@@ -27,9 +27,12 @@ class NoticeController extends Controller
         Log::info($menus);
         return view('notice.form', compact('menus', 'shop'));
     }
+
+//    お知らせを作成する
     public function store(Request $request)
     {
         DB::beginTransaction();
+        Log::info('受け取ったデータ:', $request->all());
 
         try {
             $start_time = Carbon::createFromFormat('H:i', $request->start_time)->format('Y-m-d H:i:s');
@@ -52,14 +55,6 @@ class NoticeController extends Controller
                         'menu_id' => $menuData['menuId'],
                         'discount' => $menuData['discount'],
                     ]);
-                    if (!empty($menuData['toppings'])) {
-                        foreach ($menuData['toppings'] as $toppingId) {
-                            NoticeTopping::create([
-                                'notice_menu_id' => $noticeMenu->id,
-                                'topping_id' => $toppingId,
-                            ]);
-                        }
-                    }
                 }
             } else {
                 Log::error('Menus data is not an array or is empty.');
@@ -75,18 +70,12 @@ class NoticeController extends Controller
         }
     }
 
+//    確認画面を表示させる
     public function show($id)
     {
-        // URLから渡されたidを使用してNoticeを取得
         $notice = Notice::findOrFail($id);
-
-        // Noticeに紐付けられたShopを取得
         $shop = Shop::findOrFail($notice->shop_id);
-
-        // Noticeに紐付けられたNoticeMenusとそれに紐づくMenusを取得
         $noticeMenus = NoticeMenu::with('menu')->where('notice_id', $notice->id)->get();
-
-        // 各NoticeMenuに対して関連するToppingsを取得してセット
         foreach ($noticeMenus as $noticeMenu) {
             $toppings = NoticeTopping::with('topping')
                 ->where('notice_menu_id', $noticeMenu->id)
@@ -94,13 +83,11 @@ class NoticeController extends Controller
                 ->pluck('topping')
                 ->pluck('name', 'id');
             $noticeMenu->menu->toppings = $toppings;
+            $noticeMenu->menu->discountedPrice = $noticeMenu->menu->price - $noticeMenu->discount;
         }
-
-        // Noticeの開始時間と終了時間をフォーマット
         $start_time = Carbon::parse($notice->start_time)->format('H:i');
         $end_time = Carbon::parse($notice->end_time)->format('H:i');
 
-        // ビューにデータを渡して表示
         return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time'));
     }
 

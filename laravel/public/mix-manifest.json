@@ -6,5 +6,6 @@
     "/js/menuItems.js": "/js/menuItems.js",
     "/js/payment.js": "/js/payment.js",
     "/js/option.js": "/js/option.js",
+    "/js/order-handler.js": "/js/order-handler.js",
     "/css/app.css": "/css/app.css"
 }

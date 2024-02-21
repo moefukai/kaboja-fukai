@@ -1,19 +1,33 @@
 document.addEventListener('DOMContentLoaded', function () {
-    updateTotalPrice();
-    // ここにトッピング選択や合計金額計算のロジックを追加
+    updateOptionSelections();
+    document.getElementById('total_number').addEventListener('change', updateOptionSelections);
 });
 
-    let menuPrice = 500; // メニューの基本価格
-    let discountedPrice = 450; // 値引き後の価格
-    document.getElementById('menuName').innerText = 'サンプルメニュー'; // メニュー名
-    document.getElementById('menuPrice').innerText = menuPrice;
-    document.getElementById('discountedPrice').innerText = discountedPrice;
+function updateOptionSelections() {
+    const totalNumber = parseInt(document.getElementById('total_number').value);
+    const optionContainer = document.getElementById('optionContainer');
+    optionContainer.innerHTML = '';
 
-    function updateTotalPrice() {
-    let totalNumber = parseInt(document.getElementById('total_number').value);
-    let toppingPrice = parseInt(document.getElementById('topping').value);
-    let totalPrice = (discountedPrice + toppingPrice) * totalNumber;
-    document.getElementById('totalPrice').innerText = totalPrice;
+    for (let i = 0; i < totalNumber; i++) {
+        const optionTemplate = document.getElementById('optionTemplate').content.cloneNode(true);
+        const label = optionTemplate.querySelector('.option-label');
+        label.textContent = `オプション選択 (${i + 1}個目):`;
+
+        const checkboxesContainer = optionTemplate.querySelector('.checkboxes');
+        options.forEach(option => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `options[${i}][]`;
+            checkbox.value = option.id;
+
+            const label = document.createElement('label');
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(` ${option.name} (${Math.round(option.price)}円)`));
+
+            checkboxesContainer.appendChild(label);
+            checkboxesContainer.appendChild(document.createElement('br'));
+        });
+
+        optionContainer.appendChild(optionTemplate);
+    }
 }
-
-    window.onload = updateTotalPrice;

@@ -14,22 +14,23 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
       case 0:
         _addMenuSelect = function _addMenuSelect3() {
           _addMenuSelect = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-            var menuLabel, menuSelect, discountContainer, discountLabel, discountSelect, i, option, menus;
+            var menuDiv, menuLabel, menuSelect, discountContainer, discountLabel, discountSelect, i, option, menus;
             return _regeneratorRuntime().wrap(function _callee3$(_context3) {
               while (1) switch (_context3.prev = _context3.next) {
                 case 0:
+                  menuDiv = document.createElement('div');
                   menuLabel = document.createElement('label');
                   menuLabel.textContent = 'メニュー';
-                  menusContainer.appendChild(menuLabel);
+                  menuDiv.appendChild(menuLabel);
                   menuSelect = document.createElement('select');
                   menuSelect.classList.add('form-control', 'mb-2', 'menu-select');
-                  menusContainer.appendChild(menuSelect);
+                  menuDiv.appendChild(menuSelect);
                   discountContainer = document.createElement('div');
                   discountLabel = document.createElement('label');
                   discountLabel.textContent = '値引き額';
                   discountContainer.appendChild(discountLabel);
                   discountSelect = document.createElement('select');
-                  discountSelect.classList.add('form-control', 'mb-2');
+                  discountSelect.classList.add('form-control', 'mb-2', 'discount-select');
                   for (i = 0; i <= 200; i += 10) {
                     option = document.createElement('option');
                     option.value = i;
@@ -37,13 +38,14 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     discountSelect.appendChild(option);
                   }
                   discountContainer.appendChild(discountSelect);
-                  menusContainer.appendChild(discountContainer);
-
-                  // const toppingsContainer = document.createElement('div');
-                  // menusContainer.appendChild(toppingsContainer);
-                  _context3.next = 17;
+                  menuDiv.appendChild(discountContainer);
+                  menusContainer.appendChild(menuDiv);
+                  discountSelect.addEventListener('change', function () {
+                    console.log('選択された値引き額:', this.value);
+                  });
+                  _context3.next = 20;
                   return fetchMenus();
-                case 17:
+                case 20:
                   menus = _context3.sent;
                   menus.forEach(function (menu) {
                     var option = document.createElement('option');
@@ -51,51 +53,7 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     option.textContent = "".concat(menu.name, "\uFF08").concat(Math.floor(menu.price), "\u5186\uFF09");
                     menuSelect.appendChild(option);
                   });
-
-                  // menuSelect.addEventListener('change', async () => {
-                  //     const menuId = menuSelect.value;
-                  //     console.log("選択されたメニューID:", menuId);
-                  //     // 既存のトッピングコンテナをクリア
-                  //     while (toppingsContainer.firstChild) {
-                  //         toppingsContainer.removeChild(toppingsContainer.firstChild);
-                  //     }
-                  //     toppingsContainer.setAttribute('data-menu-id', menuId);
-                  //     if (!menuId) return;
-                  //     try {
-                  //         const toppings = await fetchToppings(menuId);
-                  //         toppings.forEach(topping => {
-                  //             const toppingContainer = document.createElement('div');
-                  //             toppingContainer.classList.add('topping-container');
-                  //
-                  //             const checkbox = document.createElement('input');
-                  //             checkbox.type = 'checkbox';
-                  //             checkbox.name = `toppings[${menuId}][]`;
-                  //             checkbox.value = topping.id;
-                  //             checkbox.classList.add("topping-checkbox");
-                  //
-                  //             checkbox.addEventListener('change', function() {
-                  //                 if (this.checked) {
-                  //                     console.log(`チェックされました: ${topping.id}`);
-                  //                 } else {
-                  //                     console.log(`チェックが外されました: ${topping.id}`);
-                  //                 }
-                  //             });
-                  //
-                  //             const label = document.createElement('label');
-                  //             label.classList.add('topping-label');
-                  //             label.textContent = ` ${topping.name} (${Math.floor(topping.price)}円)`;
-                  //
-                  //             toppingContainer.appendChild(checkbox);
-                  //             toppingContainer.appendChild(label);
-                  //             toppingsContainer.appendChild(toppingContainer);
-                  //         });
-                  //     } catch (error) {
-                  //         console.error(error.message);
-                  //         toppingsContainer.innerHTML = 'トッピングの取得に失敗しました。';
-                  //     }
-                  // });
-                  menuSelect.dispatchEvent(new Event('change'));
-                case 20:
+                case 22:
                 case "end":
                   return _context3.stop();
               }
@@ -137,55 +95,27 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
         fetchMenus = function _fetchMenus2() {
           return _fetchMenus.apply(this, arguments);
         };
-        console.log("イベントリスナーです");
         menusContainer = document.getElementById('menus-container');
         addMenuBtn = document.getElementById('add-menu-btn');
-        submitButton = document.getElementById('submit-form'); // async function fetchToppings(menuId) {
-        //     const response = await fetch(`/menus/${menuId}/toppings`);
-        //     if (!response.ok) {
-        //         throw new Error('Toppings fetching failed.');
-        //     }
-        //     return await response.json();
-        // }
+        submitButton = document.getElementById('submit-form');
         addMenuBtn.addEventListener('click', addMenuSelect);
         submitButton.addEventListener('click', /*#__PURE__*/function () {
           var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-            var address, startTime, endTime, menus, menuSelects, data, response, result;
+            var address, startTime, endTime, menus, data, response, result;
             return _regeneratorRuntime().wrap(function _callee$(_context) {
               while (1) switch (_context.prev = _context.next) {
                 case 0:
-                  console.log('送信ボタンがクリックされました');
                   event.preventDefault();
                   address = document.getElementById('address').value;
                   startTime = document.getElementById('start_time').value;
-                  endTime = document.getElementById('end_time').value;
-                  console.log('フォームの値:', {
-                    address: address,
-                    startTime: startTime,
-                    endTime: endTime
-                  });
-                  menus = [];
-                  document.querySelectorAll('.menu-select').forEach(function (menuSelect, index) {
-                    var menuId = menuSelect.value;
-                    var discountSelects = document.querySelectorAll('.discount-select');
-                    var discount = discountSelects.length > index ? discountSelects[index].value : '0';
-                    console.log("\u30E1\u30CB\u30E5\u30FC".concat(index + 1, ":"), {
-                      menuId: menuId,
-                      discount: discount
-                    });
-                    // const toppings = Array.from(document.querySelectorAll(`.toppings-container[data-menu-id="${menuId}"] .topping-checkbox:checked`)).map(checkbox => checkbox.value);
-                    // console.log(`トッピング${index + 1}:`, toppings);
-                    // menus.push({ menuId, discount, toppings });
-                    menus.push({
-                      menuId: menuId,
-                      discount: discount
-                    });
-                  });
-                  console.log('menus:', menus);
-                  menuSelects = document.querySelectorAll('.menu-select');
-                  console.log('menu-select要素:', menuSelects);
-                  menuSelects.forEach(function (select, index) {
-                    console.log("\u30E1\u30CB\u30E5\u30FC".concat(index + 1, "\u306E\u5024:"), select.value);
+                  endTime = document.getElementById('end_time').value; // メニューセレクトボックスと値引き額セレクトボックスの組み合わせを取得してデータを作成
+                  menus = Array.from(document.querySelectorAll('.menu-select')).map(function (menuSelect, index) {
+                    var discountSelect = document.querySelectorAll('.discount-select')[index]; // 同じインデックスの値引き額セレクトボックスを取得
+                    return {
+                      menuId: menuSelect.value,
+                      // メニューID
+                      discount: discountSelect ? discountSelect.value : '0' // 値引き額（未選択の場合は0を設定）
+                    };
                   });
                   data = {
                     address: address,
@@ -193,9 +123,8 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     end_time: endTime,
                     menus: menus
                   };
-                  console.log("送信データ:", JSON.stringify(data));
-                  _context.prev = 14;
-                  _context.next = 17;
+                  _context.prev = 6;
+                  _context.next = 9;
                   return fetch('/notice', {
                     method: 'POST',
                     headers: {
@@ -204,40 +133,38 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                     },
                     body: JSON.stringify(data)
                   });
-                case 17:
+                case 9:
                   response = _context.sent;
-                  console.log('送信試行');
                   if (response.ok) {
-                    _context.next = 21;
+                    _context.next = 12;
                     break;
                   }
                   throw new Error('Server response was not OK');
-                case 21:
-                  _context.next = 23;
+                case 12:
+                  _context.next = 14;
                   return response.json();
-                case 23:
+                case 14:
                   result = _context.sent;
-                  console.log('送信結果:', result);
                   if (result.redirect_url) {
                     window.location.href = result.redirect_url;
                   }
-                  _context.next = 31;
+                  _context.next = 21;
                   break;
-                case 28:
-                  _context.prev = 28;
-                  _context.t0 = _context["catch"](14);
+                case 18:
+                  _context.prev = 18;
+                  _context.t0 = _context["catch"](6);
                   console.error('Error:', _context.t0);
-                case 31:
+                case 21:
                 case "end":
                   return _context.stop();
               }
-            }, _callee, null, [[14, 28]]);
+            }, _callee, null, [[6, 18]]);
           }));
           return function (_x) {
             return _ref2.apply(this, arguments);
           };
         }());
-      case 10:
+      case 9:
       case "end":
         return _context4.stop();
     }
