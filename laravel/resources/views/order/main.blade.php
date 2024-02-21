@@ -10,20 +10,14 @@
                 </div>
                 <div class="menu-info">
                     <h3>{{ $noticeMenu->menu->name }}</h3>
-                    <p>定価: ¥{{ number_format($noticeMenu->menu->price) }}</p>
+                    <p>定価: {{ number_format($noticeMenu->menu->price) }}円</p>
                     @if($noticeMenu->discount > 0)
-                        <p><strong>値引き後: ¥{{ number_format($noticeMenu->menu->price - $noticeMenu->discount) }}</strong></p>
+                        <p><strong>値引き後: {{ number_format($noticeMenu->menu->price - $noticeMenu->discount) }}円</strong></p>
                     @endif
                 </div>
             </div>
         @endforeach
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        // 必要に応じてJavaScriptをここに追加
-    </script>
 @endsection
 
 @section('styles')

@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     updateOptionSelections();
-    document.getElementById('total_number').addEventListener('change', updateOptionSelections);
+    updateTotalPrice();
+    document.getElementById('total_number').addEventListener('change', function() {
+        updateOptionSelections();
+        updateTotalPrice();
+    });
 });
 
 function updateOptionSelections() {
@@ -19,6 +23,7 @@ function updateOptionSelections() {
             checkbox.type = 'checkbox';
             checkbox.name = `options[${i}][]`;
             checkbox.value = option.id;
+            checkbox.dataset.price = option.price;
 
             const label = document.createElement('label');
             label.appendChild(checkbox);
@@ -31,3 +36,22 @@ function updateOptionSelections() {
         optionContainer.appendChild(optionTemplate);
     }
 }
+
+function updateTotalPrice() {
+    const discountedPriceElement = document.querySelector('#discountedPrice');
+    const menuPrice = discountedPriceElement ? parseFloat(discountedPriceElement.textContent.replace(/[^0-9.]/g, "")) : 0;
+    const totalNumber = parseInt(document.getElementById('total_number').value);
+    let totalPrice = menuPrice * totalNumber;
+
+    document.querySelectorAll('.checkboxes input:checked').forEach(checkbox => {
+        const checkboxPrice = checkbox.dataset.price ? parseFloat(checkbox.dataset.price) : 0;
+        totalPrice += checkboxPrice;
+    });
+
+    document.getElementById('totalPrice').textContent = Math.round(totalPrice);
+}
+
+document.getElementById('optionContainer').addEventListener('change', updateTotalPrice);
+document.getElementById('total_number').addEventListener('change', updateTotalPrice);
+
+updateTotalPrice();

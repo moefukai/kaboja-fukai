@@ -64,7 +64,8 @@ Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('p
 //Order
 Route::get('/order/main/{shop_id}', [OrderController::class, 'create'])->name('order.main');
 Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'show'])->name('order.detail.show');
-Route::post('/order/store', [OrderController::class, 'store'])->name('order.store');
+Route::post('/order/detail/store', [OrderController::class, 'storeDetail'])->name('order.detail.store');
+Route::post('/order/visitor/store', [OrderController::class, 'storeVisitorInfo'])->name('order.visitor.store');
 Route::get('/order/confirm/{orderId}', [OrderController::class, 'confirm'])->name('order.confirm');
 Route::get('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
 

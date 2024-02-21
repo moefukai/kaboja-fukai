@@ -5,7 +5,11 @@ var __webpack_exports__ = {};
   \***************************************/
 document.addEventListener('DOMContentLoaded', function () {
   updateOptionSelections();
-  document.getElementById('total_number').addEventListener('change', updateOptionSelections);
+  updateTotalPrice();
+  document.getElementById('total_number').addEventListener('change', function () {
+    updateOptionSelections();
+    updateTotalPrice();
+  });
 });
 function updateOptionSelections() {
   var totalNumber = parseInt(document.getElementById('total_number').value);
@@ -21,6 +25,7 @@ function updateOptionSelections() {
       checkbox.type = 'checkbox';
       checkbox.name = "options[".concat(i, "][]");
       checkbox.value = option.id;
+      checkbox.dataset.price = option.price;
       var label = document.createElement('label');
       label.appendChild(checkbox);
       label.appendChild(document.createTextNode(" ".concat(option.name, " (").concat(Math.round(option.price), "\u5186)")));
@@ -33,5 +38,20 @@ function updateOptionSelections() {
     _loop(i);
   }
 }
+function updateTotalPrice() {
+  var discountedPriceElement = document.querySelector('#discountedPrice');
+  var menuPrice = discountedPriceElement ? parseFloat(discountedPriceElement.textContent.replace(/[^0-9.]/g, "")) : 0;
+  var totalNumber = parseInt(document.getElementById('total_number').value);
+  var totalPrice = menuPrice * totalNumber;
+  document.querySelectorAll('.checkboxes input:checked').forEach(function (checkbox) {
+    var checkboxPrice = checkbox.dataset.price ? parseFloat(checkbox.dataset.price) : 0; // data-priceが設定されていない場合は0とする
+    totalPrice += checkboxPrice;
+  });
+  document.getElementById('totalPrice').textContent = Math.round(totalPrice); // 合計金額を整数で表示
+}
+document.getElementById('optionContainer').addEventListener('change', updateTotalPrice);
+document.getElementById('total_number').addEventListener('change', updateTotalPrice); // 個数選択セレクトボックスの変更も監視
+
+updateTotalPrice();
 /******/ })()
 ;
