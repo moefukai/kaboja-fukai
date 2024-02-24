@@ -42,8 +42,8 @@ button[type="submit"] {
     cursor: pointer;
     font-size: 16px;
         width: 60%;
-        margin: 0 auto; /* ボタンを中央に配置 */
-        display: block; /* ブロックレベル要素として表示 */
+        margin: 0 auto;
+        display: block;
 }
 
 button[type="submit"]:hover {
@@ -59,3 +59,5 @@ button[type="submit"]:hover {
 .topping-label {
     margin-left: 8px;
 }
+
+

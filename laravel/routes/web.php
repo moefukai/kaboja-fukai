@@ -8,6 +8,7 @@ use App\Http\Controllers\TwitterController;
 use App\Http\Controllers\TwitterTestController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CheckOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,10 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/notice', [NoticeController::class, 'create'])->name('notice.create');
 Route::post('/notice', [NoticeController::class, 'store'])->name('notice.store');
 Route::get('/notice/confirm/{id}', [NoticeController::class, 'show'])->name('notice.confirm');
-Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice.edit');
+Route::get('/notice/final', [TwitterTestController::class, 'final'])->name('notice.final');
+Route::post('/notice/final', [TwitterTestController::class, 'final'])->name('notice.final');
+
+//Route::get('/notice/edit/{id}', [NoticeController::class, 'edit'])->name('notice.edit');
 
 // Shop
 Route::get('/shop', [ShopController::class, 'create'])->name('shops.create');
@@ -63,11 +67,19 @@ Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('p
 
 //Order
 Route::get('/order/main/{shop_id}', [OrderController::class, 'create'])->name('order.main');
-Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'show'])->name('order.detail.show');
+Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'showDetail'])->name('order.detail.show');
 Route::post('/order/detail/store', [OrderController::class, 'storeDetail'])->name('order.detail.store');
-Route::post('/order/visitor/store', [OrderController::class, 'storeVisitorInfo'])->name('order.visitor.store');
+//Route::get('/order/visitor', [OrderController::class, 'showVisitorInfo'])->name('order.visitor.show');
+//Route::post('/order/visitor/store', [OrderController::class, 'storeVisitorInfo'])->name('order.visitor.store');
 Route::get('/order/confirm/{orderId}', [OrderController::class, 'confirm'])->name('order.confirm');
 Route::get('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
+Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
+
+//CheckOrder
+Route::get('/check-order', [CheckOrderController::class, 'showTabs'])->name('check.order.show');
+
+//セッション管理
+Route::post('/save-notice-menu-id', [OrderController::class, 'saveNoticeMenuId']);
 
 // Auth routes
 require __DIR__.'/auth.php';

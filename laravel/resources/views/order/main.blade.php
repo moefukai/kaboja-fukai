@@ -2,23 +2,24 @@
 
 @section('content')
     <div class="container">
-        <h1>メニュー一覧</h1>
+        <h1>Menu</h1>
         @foreach ($noticeMenus as $noticeMenu)
-            <div class="menu-item" onclick="location.href='{{ route('order.detail.show', ['noticeMenuId' => $noticeMenu->id]) }}'" style="cursor: pointer;">
-            <div class="menu-image">
-                    <!-- ここに将来的に画像を挿入 -->
+            <div class="menu-item" data-notice-menu-id="{{ $noticeMenu->id }}" style="cursor: pointer;">
+                <div class="menu-image">
+                    <!-- Image insertion point -->
                 </div>
                 <div class="menu-info">
                     <h3>{{ $noticeMenu->menu->name }}</h3>
-                    <p>定価: {{ number_format($noticeMenu->menu->price) }}円</p>
-                    @if($noticeMenu->discount > 0)
-                        <p><strong>値引き後: {{ number_format($noticeMenu->menu->price - $noticeMenu->discount) }}円</strong></p>
-                    @endif
+                    <p><strong>{{ number_format($noticeMenu->menu->price - $noticeMenu->discount) }} 円</strong> @if($noticeMenu->discount > 0)
+                        （定価：{{ number_format($noticeMenu->menu->price) }} 円）@endif</p>
                 </div>
             </div>
         @endforeach
     </div>
 @endsection
+@push('scripts')
+    <script src="{{ asset('js/orderMain.js') }}"></script>
+@endpush
 
 @section('styles')
 {{--    <style>--}}

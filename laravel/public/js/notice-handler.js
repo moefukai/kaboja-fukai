@@ -108,13 +108,12 @@ document.addEventListener('DOMContentLoaded', /*#__PURE__*/_asyncToGenerator( /*
                   event.preventDefault();
                   address = document.getElementById('address').value;
                   startTime = document.getElementById('start_time').value;
-                  endTime = document.getElementById('end_time').value; // メニューセレクトボックスと値引き額セレクトボックスの組み合わせを取得してデータを作成
+                  endTime = document.getElementById('end_time').value;
                   menus = Array.from(document.querySelectorAll('.menu-select')).map(function (menuSelect, index) {
-                    var discountSelect = document.querySelectorAll('.discount-select')[index]; // 同じインデックスの値引き額セレクトボックスを取得
+                    var discountSelect = document.querySelectorAll('.discount-select')[index];
                     return {
                       menuId: menuSelect.value,
-                      // メニューID
-                      discount: discountSelect ? discountSelect.value : '0' // 値引き額（未選択の場合は0を設定）
+                      discount: discountSelect ? discountSelect.value : '0'
                     };
                   });
                   data = {

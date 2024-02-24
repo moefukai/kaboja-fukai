@@ -90,7 +90,6 @@ class NoticeController extends Controller
 
         return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time'));
     }
-
     public function edit($id)
     {
         $notice = Notice::findOrFail($id);

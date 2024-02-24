@@ -1,57 +1,55 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // オプション選択肢の更新
     updateOptionSelections();
+    // 合計価格の更新
     updateTotalPrice();
-    document.getElementById('total_number').addEventListener('change', function() {
-        updateOptionSelections();
-        updateTotalPrice();
-    });
+    // オプションの変更時に合計価格を更新
+    const optionContainerElement = document.getElementById('optionContainer');
+    if (optionContainerElement) {
+        optionContainerElement.addEventListener('change', function(e) {
+            if (e.target.type === 'checkbox') {
+                updateTotalPrice();
+            }
+        });
+    }
 });
 
 function updateOptionSelections() {
-    const totalNumber = parseInt(document.getElementById('total_number').value);
     const optionContainer = document.getElementById('optionContainer');
+    if (!optionContainer) return;
+
     optionContainer.innerHTML = '';
 
-    for (let i = 0; i < totalNumber; i++) {
-        const optionTemplate = document.getElementById('optionTemplate').content.cloneNode(true);
-        const label = optionTemplate.querySelector('.option-label');
-        label.textContent = `オプション選択 (${i + 1}個目):`;
+    options.forEach(option => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = `options[]`;
+        checkbox.value = option.id;
+        checkbox.dataset.price = option.price;
 
-        const checkboxesContainer = optionTemplate.querySelector('.checkboxes');
-        options.forEach(option => {
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.name = `options[${i}][]`;
-            checkbox.value = option.id;
-            checkbox.dataset.price = option.price;
+        const label = document.createElement('label');
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(` ${option.name} (${Math.round(option.price)}円)`));
 
-            const label = document.createElement('label');
-            label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(` ${option.name} (${Math.round(option.price)}円)`));
-
-            checkboxesContainer.appendChild(label);
-            checkboxesContainer.appendChild(document.createElement('br'));
-        });
-
-        optionContainer.appendChild(optionTemplate);
-    }
+        optionContainer.appendChild(label);
+        optionContainer.appendChild(document.createElement('br'));
+    });
 }
 
 function updateTotalPrice() {
-    const discountedPriceElement = document.querySelector('#discountedPrice');
-    const menuPrice = discountedPriceElement ? parseFloat(discountedPriceElement.textContent.replace(/[^0-9.]/g, "")) : 0;
-    const totalNumber = parseInt(document.getElementById('total_number').value);
-    let totalPrice = menuPrice * totalNumber;
+    const discountedPriceElement = document.getElementById('discountedPrice');
+    if (!discountedPriceElement) return;
 
-    document.querySelectorAll('.checkboxes input:checked').forEach(checkbox => {
-        const checkboxPrice = checkbox.dataset.price ? parseFloat(checkbox.dataset.price) : 0;
-        totalPrice += checkboxPrice;
+    const discountedPrice = parseFloat(discountedPriceElement.dataset.discountedPrice);
+    let totalPrice = discountedPrice;
+
+    document.querySelectorAll('#optionContainer input[type="checkbox"]:checked').forEach(function(checkbox) {
+        totalPrice += parseFloat(checkbox.dataset.price);
     });
 
     document.getElementById('totalPrice').textContent = Math.round(totalPrice);
+    const totalPriceInput = document.getElementById('total_price');
+    if (totalPriceInput) {
+        totalPriceInput.value = Math.round(totalPrice);
+    }
 }
-
-document.getElementById('optionContainer').addEventListener('change', updateTotalPrice);
-document.getElementById('total_number').addEventListener('change', updateTotalPrice);
-
-updateTotalPrice();

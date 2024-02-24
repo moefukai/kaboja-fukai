@@ -7,65 +7,34 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Add menu button clicked');
         const menuIndex = document.querySelectorAll('.menu-section').length;
         let menuSection = document.createElement('div');
-        menuSection.classList.add('menu-section');
-        menuSection.innerHTML = `
-            <hr>
-            <label>メニュー名:</label>
-            <input type="text" name="menus[${menuIndex}][name]" required>
-            <label>価格:</label>
-            <input type="number" name="menus[${menuIndex}][price]" required>
-            <div>
-                <input type="checkbox" class="has-toppings" name="menus[${menuIndex}][has_toppings]"> トッピングあり
-                <div class="toppings-container" style="display: none;"></div>
-                <button type="button" class="add-topping">トッピングを追加</button>
-            </div>
+        menuSection.classList.add('menu-section', 'mt-4');
+
+        const menuNameSection = document.createElement('div');
+        menuNameSection.classList.add('flex', 'items-center', 'mt-2');
+        menuNameSection.innerHTML = `
+            <input type="text" name="menus[${menuIndex}][name]" required class="peer flex-grow border-0 bg-gray-50 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6" placeholder="メニュー名を入力">
+            <button class="remove-menu text-gray-400 hover:text-gray-600 ml-2" type="button">&times;</button>
         `;
-        const removeMenuButton = document.createElement('button');
-        removeMenuButton.textContent = 'メニューを削除';
-        removeMenuButton.type = 'button';
-        removeMenuButton.classList.add('remove-menu'); // CSSでスタイリングする場合に使用するクラス
-        menuSection.appendChild(removeMenuButton);
+        menuSection.appendChild(menuNameSection);
 
-        // 削除ボタンのイベントリスナーを追加
-        removeMenuButton.addEventListener('click', function() {
-            console.log('Remove menu button clicked');
-            menuSection.remove();
+        const menuPriceSection = document.createElement('div');
+        menuPriceSection.classList.add('flex', 'items-center', 'mt-2');
+        menuPriceSection.innerHTML = `
+            <input type="number" name="menus[${menuIndex}][price]" required class="peer flex-grow border-0 bg-gray-50 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6" placeholder="価格を入力">
+            <button class="remove-menu text-gray-400 hover:text-gray-600 ml-2" type="button">&times;</button>
+        `;
+        menuSection.appendChild(menuPriceSection);
+
+        const removeButtons = menuSection.querySelectorAll('.remove-menu');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Remove menu button clicked');
+                menuSection.remove();
+            });
         });
-        menuSection.appendChild(removeMenuButton);
+
         console.log('Remove menu button added');
-
-        removeMenuButton.addEventListener('click', function() { menuSection.remove(); });
-
         menuContainer.appendChild(menuSection);
         console.log('Menu section added to container');
-
-        menuSection.querySelector('.add-topping').addEventListener('click', function() {
-            console.log('Add topping button clicked');
-            const toppingIndex = menuSection.querySelectorAll('.topping-section').length;
-            const toppingSection = document.createElement('div');
-            toppingSection.classList.add('topping-section');
-            toppingSection.innerHTML = `
-                <label>トッピング名:</label>
-                <input type="text" name="menus[${menuIndex}][toppings][${toppingIndex}][name]" required>
-                <label>価格:</label>
-                <input type="number" name="menus[${menuIndex}][toppings][${toppingIndex}][price]" required>
-                <button type="button" class="remove-topping">トッピングを削除</button>
-            `;
-
-            const removeToppingButton = toppingSection.querySelector('.remove-topping');
-            removeToppingButton.addEventListener('click', function() {
-                console.log('Remove topping button clicked');
-                toppingSection.remove();
-            });
-            console.log('Remove topping button added and event listener set');
-
-            menuSection.querySelector('.toppings-container').appendChild(toppingSection);
-            console.log('Topping section added to container');
-        });
-
-        menuSection.querySelector('.has-toppings').addEventListener('change', function() {
-            console.log('Toppings visibility toggled');
-            menuSection.querySelector('.toppings-container').style.display = this.checked ? 'block' : 'none';
-        });
     });
 });

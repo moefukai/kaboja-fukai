@@ -7,5 +7,6 @@
     "/js/payment.js": "/js/payment.js",
     "/js/option.js": "/js/option.js",
     "/js/order-handler.js": "/js/order-handler.js",
+    "/js/orderMain.js": "/js/orderMain.js",
     "/css/app.css": "/css/app.css"
 }

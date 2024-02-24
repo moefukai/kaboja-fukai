@@ -19,15 +19,15 @@ class MenuController extends Controller
                 'price' => $menuData['price'],
                 'shop_id' => $shop->id,
             ]);
-            if (isset($menuData['toppings'])) {
-                foreach ($menuData['toppings'] as $toppingData) {
-                    $topping = Topping::firstOrCreate([
-                        'name' => $toppingData['name'],
-                        'price' => $toppingData['price'],
-                    ]);
-                    $menu->toppings()->attach($topping->id);
-                }
-            }
+//            if (isset($menuData['toppings'])) {
+//                foreach ($menuData['toppings'] as $toppingData) {
+//                    $topping = Topping::firstOrCreate([
+//                        'name' => $toppingData['name'],
+//                        'price' => $toppingData['price'],
+//                    ]);
+//                    $menu->toppings()->attach($topping->id);
+//                }
+//            }
             return redirect()->route('shops.confirm');
         }
     }

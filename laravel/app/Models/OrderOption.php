@@ -12,4 +12,9 @@ class OrderOption extends Model
     {
         return $this->belongsTo(OrderMenu::class);
     }
+
+    public function option()
+    {
+        return $this->belongsTo(Option::class);
+    }
 }

@@ -61,12 +61,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const startTime = document.getElementById('start_time').value;
         const endTime = document.getElementById('end_time').value;
 
-        // メニューセレクトボックスと値引き額セレクトボックスの組み合わせを取得してデータを作成
         const menus = Array.from(document.querySelectorAll('.menu-select')).map((menuSelect, index) => {
-            const discountSelect = document.querySelectorAll('.discount-select')[index]; // 同じインデックスの値引き額セレクトボックスを取得
+            const discountSelect = document.querySelectorAll('.discount-select')[index];
             return {
-                menuId: menuSelect.value, // メニューID
-                discount: discountSelect ? discountSelect.value : '0' // 値引き額（未選択の場合は0を設定）
+                menuId: menuSelect.value,
+                discount: discountSelect ? discountSelect.value : '0'
             };
         });
 

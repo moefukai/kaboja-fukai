@@ -17,4 +17,9 @@ class OrderMenu extends Model
     {
         return $this->hasMany(OrderOption::class);
     }
+
+    public function noticeMenu()
+    {
+        return $this->belongsTo(NoticeMenu::class, 'notice_menu_id');
+    }
 }

@@ -25,4 +25,14 @@ class Shop extends Model
     {
         return $this->hasMany(Option::class);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function notices()
+    {
+        return $this->hasMany(Notice::class);
+    }
 }

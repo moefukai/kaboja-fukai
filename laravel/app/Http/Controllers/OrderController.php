@@ -14,10 +14,17 @@ use App\Models\OrderOption;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Option;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function create($shopId)
+    public function saveNoticeMenuId(Request $request)
+    {
+        $request->session()->put('selected_notice_menu_id', $request->input('noticeMenuId'));
+
+        return response()->json(['success' => true]);
+    }
+    public function create(Request $request, $shopId)
     {
         $latestNotice = Notice::where('shop_id', $shopId)->latest('created_at')->first();
 
@@ -28,130 +35,184 @@ class OrderController extends Controller
             ->where('notice_id', $latestNotice->id)
             ->get();
 
+        $selectedNoticeMenuId = $request->input('selected_notice_menu_id');
+        session(['selected_notice_menu_id' => $selectedNoticeMenuId]);
+
         return view('order.main', [
             'noticeMenus' => $noticeMenus,
         ]);
     }
-    public function show($noticeMenuId)
+    public function showDetail($noticeMenuId)
     {
-        $noticeMenu = NoticeMenu::with(['menu'])->findOrFail($noticeMenuId);
+        Log::info('NoticeMenuId:', ['noticeMenuId' => $noticeMenuId]);
+
+        $noticeMenu = NoticeMenu::with('menu')->findOrFail($noticeMenuId);
+        Log::info('Retrieved NoticeMenu:', ['noticeMenu' => $noticeMenu]);
+
         $discountedPrice = $noticeMenu->menu->price - $noticeMenu->discount;
         $shopId = $noticeMenu->notice->shop_id;
         $options = Option::where('shop_id', $shopId)->get();
-        $times = [];
-        for ($time = Carbon::createFromTime(11, 0); $time->lessThan(Carbon::createFromTime(15, 0)); $time->addMinutes(15)) {
-            $times[] = $time->format('H:i');
-        }
-        session(['shop_id' => $shopId]);
+
         return view('order.detail.show', [
             'shopId' => $shopId,
             'noticeMenu' => $noticeMenu,
             'discountedPrice' => $discountedPrice,
-            'times' => $times,
-            'options' => $options
+            'options' => $options,
         ]);
     }
 
+
     public function storeDetail(Request $request)
     {
+        Log::info('Received request data:', $request->all());
         DB::beginTransaction();
+        $currentDate = date('Y-m-d');
+        $visitingDateTime = $currentDate . ' ' . $request->input('visiting_time') . ':00';
+        $noticeMenuId = $request->input('notice_menu_id');
+        $noticeMenu = NoticeMenu::findOrFail($noticeMenuId);
+        $menuPrice = $noticeMenu->menu->price;
+        $discount = $noticeMenu->discount ?? 0;
+        $discountedMenuPrice = $menuPrice - $discount;
+        $selectedOptionIds = $request->input('options', []);
+        $optionsTotalPrice = Option::whereIn('id', $selectedOptionIds)
+            ->get()
+            ->sum('price');
+        $totalPrice = $discountedMenuPrice + $optionsTotalPrice;
 
         try {
-            $order = new Order();
-            $order->tell = $request->input('tell');
-            $order->visiting_time = $request->input('visiting_time');
-            $order->note = $request->input('note');
-            $order->total_price = 0;
+            $order = new Order([
+                'tell' => $request->input('tell'),
+                'visiting_time' => $visitingDateTime,
+                'note' => $request->input('note'),
+                'total_price' => $totalPrice,
+                'status' => 1,
+                'shop_id' => $request->input('shop_id'),
+            ]);
             $order->save();
+            $orderMenu = new OrderMenu([
+                'order_id' => $order->id,
+                'notice_menu_id' => $noticeMenuId,
+            ]);
+            $orderMenu->save();
+            foreach ($selectedOptionIds as $optionId) {
+                $orderOption = new OrderOption([
+                    'order_menu_id' => $orderMenu->id,
+                    'option_id' => $optionId,
+                ]);
+                $orderOption->save();
+            }
+            Log::info('Order created.', ['order_id' => $order->id]);
+            DB::commit();
+            return redirect()->route('order.confirm', ['orderId' => $order->id]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Order processing failed.', ['error' => $e->getMessage()]);
+            return back()->with('error', '注文処理中にエラーが発生しました。');
+        }
+    }
+    public function confirm($orderId)
+    {
+        $order = Order::with(['orderMenus.noticeMenu', 'orderMenus.orderOptions.option'])->findOrFail($orderId);
 
-            $totalPrice = 0;
+        $noticeMenu = null;
+        $discountedPrice = 0;
+        $selectedOptions = [];
+        $totalPrice = 0;
 
-            foreach ($request->input('menus') as $menu) {
-                $orderMenu = new OrderMenu();
-                $orderMenu->order_id = $order->id;
-                $orderMenu->notice_menu_id = $menu['menuId'];
-                $orderMenu->save();
-
-                if (isset($menu['options'])) {
-                    foreach ($menu['options'] as $optionId) {
-                        $orderOption = new OrderOption();
-                        $orderOption->order_menu_id = $orderMenu->id;
-                        $orderOption->option_id = $optionId;
-                        $orderOption->save();
-
-                        $option = Option::find($optionId);
-                        $totalPrice += $option->price;
-                    }
+        if ($order->orderMenus->isNotEmpty()) {
+            foreach ($order->orderMenus as $orderMenu) {
+                $noticeMenu = $orderMenu->noticeMenu;
+                if ($noticeMenu) {
+                    $menuPrice = $noticeMenu->menu->price ?? 0;
+                    $discount = $noticeMenu->discount ?? 0;
+                    $menuDiscountedPrice = $menuPrice - $discount;
+                    $discountedPrice += $menuDiscountedPrice;
                 }
-
-                $noticeMenu = NoticeMenu::find($menu['menuId']);
-                $discountedPrice = $noticeMenu->menu->price - $noticeMenu->discount;
-                $totalPrice += $discountedPrice;
+                foreach ($orderMenu->orderOptions as $orderOption) {
+                    $selectedOptions[] = $orderOption->option;
+                    $totalPrice += $orderOption->option->price ?? 0;
+                }
             }
-
-            $order->total_price = $totalPrice;
-            $order->save();
-
-            DB::commit();
-
-            $action = $request->input('action');
-            if ($action == 'add_more') {
-                $shopId = session('shop_id');
-                return redirect()->route('order.main', ['shop_id' => $shopId]);
-            } elseif ($action == 'confirm_order') {
-                return redirect()->route('order.confirm');
-            } else {
-                return back()->with('error', '不明なアクションです。');
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', '注文処理中にエラーが発生しました。');
+            $totalPrice += $discountedPrice;
         }
-    }
 
-    public function storeVisitorInfo(Request $request)
+        $visitingTime = $order->visiting_time;
+        $tell = $order->tell;
+        $note = $order->note ?? 'なし';
+        $shopId = $order->shop_id;
+
+        return view('order.confirm', compact('order', 'noticeMenu', 'discountedPrice', 'selectedOptions', 'totalPrice', 'visitingTime', 'tell', 'note', 'shopId'));
+    }
+    public function final(Request $request, $orderId)
     {
-        DB::beginTransaction();
+        $order = Order::with('shop')->findOrFail($orderId);
 
-        try {
-            $order = new Order();
-            $order->tell = $request->input('tell');
-            $order->visiting_time = $request->input('visiting_time');
-            $order->note = $request->input('note');
-            $order->total_price = 0;
-            $order->save();
+        $shop = $order->shop;
 
-            DB::commit();
+        $latestNotice = $shop->notices()->latest()->first();
 
-            $action = $request->input('action');
-            if ($action == 'add_more') {
-                $shopId = session('shop_id');
-                return redirect()->route('order.main', ['shop_id' => $shopId]);
-            } elseif ($action == 'confirm_order') {
-                return redirect()->route('order.confirm');
-            } else {
-                return back()->with('error', '不明なアクションです。');
-            }
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', '注文処理中にエラーが発生しました。');
-        }
+        $address = $latestNotice ? $latestNotice->address : '未定';
+
+        return view('order.final', [
+            'orderId' => $order->id,
+            'shopName' => $shop->name,
+            'address' => $address
+        ]);
     }
 
-    public function confirm(Request $request)
-    {
-        $visitorInfo = [
-            'tell' => $request->input('tell'),
-            'visiting' => $request->input('visiting'),
-            'note' => $request->input('note'),
-        ];
-        $orders = session('orders', []);
-        // ここでorders_table、selected_menus_table、selected_toppings_tableへの保存処理を実装します。
-        session()->forget('orders');
-        return redirect()->route('order.final');
-    }
-    public function final()
-    {
-        return view('order.final');
-    }
+
+
+
+//    public function showVisitorInfo()
+//    {
+//        return view('order.visitor.show');
+//    }
+
+//    public function storeVisitorInfo(Request $request)
+//    {
+//        DB::beginTransaction();
+//
+//        $currentDate = date('Y-m-d');
+//        $visitingDateTime = $currentDate . ' ' . $request->input('visiting_time') . ':00';
+//
+//        try {
+//            $order = new Order();
+//            $order->tell = $request->input('tell');
+//            $order->visiting_time = $visitingDateTime;
+//            $order->note = $request->input('note');
+//            $order->total_price = 0;
+//            $order->save();
+//
+//            DB::commit();
+//
+//            $action = $request->input('action');
+//            if ($action == 'add_more') {
+//                $shopId = session('shop_id');
+//                return redirect()->route('order.main', ['shop_id' => $shopId]);
+//            } elseif ($action == 'confirm_order') {
+//                return redirect()->route('order.confirm');
+//            } else {
+//                return back()->with('error', '不明なアクションです。');
+//            }
+//        } catch (\Exception $e) {
+//            DB::rollBack();
+//            return back()->with('error', '注文処理中にエラーが発生しました。');
+//        }
+//    }
+
+//    public function confirm(Request $request)
+//    {
+//        $visitorInfo = [
+//            'tell' => $request->input('tell'),
+//            'visiting' => $request->input('visiting'),
+//            'note' => $request->input('note'),
+//        ];
+//        $orders = session('orders', []);
+//        session()->forget('orders');
+//        return redirect()->route('order.final');
+//    }
+//    public function final()
+//    {
+//        return view('order.final');
+//    }
 }
