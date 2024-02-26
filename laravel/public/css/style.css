@@ -60,4 +60,29 @@ button[type="submit"]:hover {
     margin-left: 8px;
 }
 
+.custom-checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.custom-checkbox-input {
+    display: none; /* 標準のチェックボックスを非表示にする */
+}
+
+.custom-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #ffffff;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+label {
+    cursor: pointer;
+}
+
+
 

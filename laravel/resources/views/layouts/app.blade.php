@@ -21,8 +21,10 @@
 {{--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">--}}
 </head>
 <body>
+@section('header')
     <header>
-        <h1 class="logo">Kajboja</h1>
+        <h1 class="logo">Kaboja</h1>
+        @if(session('showNavigation', true))
         <div class="drawer">
             <input type="checkbox" name="navToggle" id="navToggle" class="nav-toggle">
             <label for="navToggle" class="btn-burger">
@@ -33,11 +35,13 @@
                     <li><a href="{{ route('shops.create') }}">店舗情報登録</a></li>
                     <li><a href="{{ route('notice.create') }}">X投稿作成</a></li>
                     <li><a href="{{ route('check.order.show') }}">オーダー確認</a></li>
-                    <li><a href="{{ route('logout') }}">ログアウト</a></li>
+{{--                    <li><a href="{{ route('logout') }}">ログアウト</a></li>--}}
                 </ul>
             </nav>
         </div>
+        @endif
     </header>
+@show
     <div id="app">
 {{--        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">--}}
 {{--            <div class="container">--}}

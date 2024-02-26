@@ -75,6 +75,9 @@ class NoticeController extends Controller
     {
         $notice = Notice::findOrFail($id);
         $shop = Shop::findOrFail($notice->shop_id);
+        Shop::with('payments')->findOrFail($notice->shop_id);
+        $payment = $shop->payments;
+        Log::info($payment);
         $noticeMenus = NoticeMenu::with('menu')->where('notice_id', $notice->id)->get();
         foreach ($noticeMenus as $noticeMenu) {
             $toppings = NoticeTopping::with('topping')
@@ -88,7 +91,7 @@ class NoticeController extends Controller
         $start_time = Carbon::parse($notice->start_time)->format('H:i');
         $end_time = Carbon::parse($notice->end_time)->format('H:i');
 
-        return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time'));
+        return view('notice.confirm', compact('shop', 'notice', 'noticeMenus', 'start_time', 'end_time', 'payment'));
     }
     public function edit($id)
     {

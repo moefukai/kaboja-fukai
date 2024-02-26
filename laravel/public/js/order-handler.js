@@ -4,11 +4,8 @@ var __webpack_exports__ = {};
   !*** ./resources/js/order-handler.js ***!
   \***************************************/
 document.addEventListener('DOMContentLoaded', function () {
-  // オプション選択肢の更新
   updateOptionSelections();
-  // 合計価格の更新
   updateTotalPrice();
-  // オプションの変更時に合計価格を更新
   var optionContainerElement = document.getElementById('optionContainer');
   if (optionContainerElement) {
     optionContainerElement.addEventListener('change', function (e) {
@@ -23,16 +20,28 @@ function updateOptionSelections() {
   if (!optionContainer) return;
   optionContainer.innerHTML = '';
   options.forEach(function (option) {
+    var checkboxContainer = document.createElement('div');
+    checkboxContainer.classList.add('custom-checkbox-container');
     var checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.name = "options[]";
+    checkbox.id = "option-".concat(option.id);
+    checkbox.classList.add('custom-checkbox-input');
     checkbox.value = option.id;
-    checkbox.dataset.price = option.price;
+    checkbox.dataset.price = option.price; // data-price属性を追加
+
+    var customCheckbox = document.createElement('span');
+    customCheckbox.classList.add('custom-checkbox');
     var label = document.createElement('label');
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(" ".concat(option.name, " (").concat(Math.round(option.price), "\u5186)")));
-    optionContainer.appendChild(label);
-    optionContainer.appendChild(document.createElement('br'));
+    label.htmlFor = checkbox.id;
+    label.classList.add('custom-checkbox-label');
+    label.textContent = " ".concat(option.name, " (").concat(Math.round(option.price), "\u5186)");
+    label.prepend(customCheckbox);
+    checkboxContainer.append(checkbox, label);
+    optionContainer.append(checkboxContainer);
+    checkbox.addEventListener('change', function () {
+      customCheckbox.classList.toggle('checked', checkbox.checked);
+      updateTotalPrice(); // チェックボックスの状態が変更されたときに合計金額を更新
+    });
   });
 }
 function updateTotalPrice() {
@@ -41,7 +50,7 @@ function updateTotalPrice() {
   var discountedPrice = parseFloat(discountedPriceElement.dataset.discountedPrice);
   var totalPrice = discountedPrice;
   document.querySelectorAll('#optionContainer input[type="checkbox"]:checked').forEach(function (checkbox) {
-    totalPrice += parseFloat(checkbox.dataset.price);
+    totalPrice += parseFloat(checkbox.dataset.price); // data-price属性を使用して合計金額を計算
   });
   document.getElementById('totalPrice').textContent = Math.round(totalPrice);
   var totalPriceInput = document.getElementById('total_price');

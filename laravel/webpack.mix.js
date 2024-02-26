@@ -20,6 +20,7 @@ mix.js('resources/js/app.js', 'public/js')
     .js('resources/js/option.js', 'public/js')
     .js('resources/js/order-handler.js', 'public/js')
     .js('resources/js/orderMain.js', 'public/js')
+    .js('resources/js/welcome.js', 'public/js')
     .vue()
     .postCss("resources/css/app.css", "public/css", [
         require("tailwindcss"),

@@ -52,6 +52,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap; /* テキストが折り返されないように設定 */
+            overflow: hidden; /* はみ出した内容を非表示に */
+            text-overflow: ellipsis; /* はみ出したテキストを省略記号で表示 */
         }
 
         .register {

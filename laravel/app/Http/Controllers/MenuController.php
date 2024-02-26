@@ -28,7 +28,7 @@ class MenuController extends Controller
 //                    $menu->toppings()->attach($topping->id);
 //                }
 //            }
-            return redirect()->route('shops.confirm');
+            return redirect()->route('shops.confirm')->with('showNavigation', true);
         }
     }
 

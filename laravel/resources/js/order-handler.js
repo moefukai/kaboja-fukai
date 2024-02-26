@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // オプション選択肢の更新
     updateOptionSelections();
-    // 合計価格の更新
     updateTotalPrice();
-    // オプションの変更時に合計価格を更新
     const optionContainerElement = document.getElementById('optionContainer');
     if (optionContainerElement) {
         optionContainerElement.addEventListener('change', function(e) {
@@ -21,18 +18,32 @@ function updateOptionSelections() {
     optionContainer.innerHTML = '';
 
     options.forEach(option => {
+        const checkboxContainer = document.createElement('div');
+        checkboxContainer.classList.add('custom-checkbox-container');
+
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.name = `options[]`;
+        checkbox.id = `option-${option.id}`;
+        checkbox.classList.add('custom-checkbox-input');
         checkbox.value = option.id;
-        checkbox.dataset.price = option.price;
+        checkbox.dataset.price = option.price; // data-price属性を追加
+
+        const customCheckbox = document.createElement('span');
+        customCheckbox.classList.add('custom-checkbox');
 
         const label = document.createElement('label');
-        label.appendChild(checkbox);
-        label.appendChild(document.createTextNode(` ${option.name} (${Math.round(option.price)}円)`));
+        label.htmlFor = checkbox.id;
+        label.classList.add('custom-checkbox-label');
+        label.textContent = ` ${option.name} (${Math.round(option.price)}円)`;
+        label.prepend(customCheckbox);
 
-        optionContainer.appendChild(label);
-        optionContainer.appendChild(document.createElement('br'));
+        checkboxContainer.append(checkbox, label);
+        optionContainer.append(checkboxContainer);
+
+        checkbox.addEventListener('change', () => {
+            customCheckbox.classList.toggle('checked', checkbox.checked);
+            updateTotalPrice(); // チェックボックスの状態が変更されたときに合計金額を更新
+        });
     });
 }
 
@@ -44,7 +55,7 @@ function updateTotalPrice() {
     let totalPrice = discountedPrice;
 
     document.querySelectorAll('#optionContainer input[type="checkbox"]:checked').forEach(function(checkbox) {
-        totalPrice += parseFloat(checkbox.dataset.price);
+        totalPrice += parseFloat(checkbox.dataset.price); // data-price属性を使用して合計金額を計算
     });
 
     document.getElementById('totalPrice').textContent = Math.round(totalPrice);

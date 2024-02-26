@@ -34,9 +34,6 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            white-space: nowrap; /* テキストが折り返されないように設定 */
-            overflow: hidden; /* はみ出した内容を非表示に */
-            text-overflow: ellipsis; /* はみ出したテキストを省略記号で表示 */
         }
 
         .register {
@@ -70,33 +67,37 @@
         }
 
         .tab {
-            display: inline-block;
-            padding: 8px 16px;
-            border-bottom: 2px solid transparent;
-            text-decoration: none;
-            color: #6B7280;
-            font-size: 0.875rem;
-            font-weight: 500;
+            /* タブの基本スタイル */
+            display: inline-block; /* タブをインラインブロック要素として配置 */
+            padding: 8px 16px; /* タブ内のパディング */
+            border-bottom: 2px solid transparent; /* 非アクティブタブのボーダー */
+            text-decoration: none; /* テキストの下線を除去 */
+            color: #6B7280; /* 非アクティブタブのテキストカラー */
+            font-size: 0.875rem; /* テキストサイズ */
+            font-weight: 500; /* フォントの太さ */
         }
 
         .tab-active, .tab:hover {
-            color: #F6AE2C;
-            border-bottom-color: #F6AE2C;
+            /* アクティブまたはホバー状態のタブのスタイル */
+            color: #F6AE2C; /* アクティブタブのテキストカラー */
+            border-bottom-color: #F6AE2C; /* アクティブタブのボーダーカラー */
         }
 
         .tabs-container {
-            border-bottom: 2px solid #E5E7EB;
+            /* タブコンテナのスタイル */
+            border-bottom: 2px solid #E5E7EB; /* コンテナの下線 */
         }
 
         .tabs-nav {
-            display: flex;
-            gap: 16px;
-            padding-bottom: 4px;
+            /* タブナビゲーションのスタイル */
+            display: flex; /* フレックスボックスを使用 */
+            gap: 16px; /* タブ間のギャップ */
+            padding-bottom: 4px; /* タブ下のパディングを減らして間隔を縮める */
         }
     </style>
     <div class="container">
-        <div class="container-texts">
-            <h1>注文確認</h1>
+        <div class="border-b border-gray-200 pb-5 sm:pb-0">
+            <h1 class="text-base font-semibold leading-6 text-gray-900">注文確認</h1>
             <div class="mt-3 sm:mt-4">
                 <div class="tabs-container">
                     <nav class="tabs-nav">
@@ -106,38 +107,8 @@
                     </nav>
                 </div>
             </div>
-
+        </div>
         <div class="info">
-            @foreach ($orders as $order)
-                <p>予約番号: {{ $order->id }}</p>
-                @foreach ($orders as $order)
-                    @foreach ($order->orderMenus as $orderMenu)
-                        @if ($orderMenu->menu)
-                            <p>メニュー名: {{ $orderMenu->menu->name }}</p>
-                            <p>選択したオプション：</p>
-                            <ul>
-                                @foreach ($orderMenu->orderOptions as $orderOption)
-                                    @if ($orderOption->option)
-                                    <li>{{ $orderOption->option->name }}</li>
-                                    @else
-                                        <li>オプションが関連付けられていません。</li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @else
-                            <p>メニューが関連付けられていません。</p>
-                        @endif
-                    @endforeach
-                @endforeach
-                <p>合計金額: {{ number_format($order->totalPrice) }}円</p>
-                <p>来店時間: {{ \Carbon\Carbon::parse($order->visitingTime)->format('m月d日H時i分') }}</p>
-                <p>お客様の電話番号: {{ $order->tell }}</p>
-                <p>備考: {{ $order->note }}</p>
-            @endforeach
-            <div class="container mx-auto px-4">
-                {{ $orders->links('components.custom-pagenation') }}
             </div>
         </div>
-    </div>
-    </div>
 @endsection

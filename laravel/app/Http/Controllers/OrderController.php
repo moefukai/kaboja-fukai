@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Option;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -26,11 +27,15 @@ class OrderController extends Controller
     }
     public function create(Request $request, $shopId)
     {
+        // ナビゲーションを非表示にするためのセッション設定を追加
+        session(['showNavigation' => false]);
+
         $latestNotice = Notice::where('shop_id', $shopId)->latest('created_at')->first();
 
         if (!$latestNotice) {
             return view('order.main', ['noticeMenus' => collect()]);
         }
+
         $noticeMenus = NoticeMenu::with('menu')
             ->where('notice_id', $latestNotice->id)
             ->get();
@@ -160,6 +165,17 @@ class OrderController extends Controller
         ]);
     }
 
+    public function checkOrder(Request $request)
+    {
+
+        $shopId = Auth::user()->shop->id;
+        $orders = Order::where('shop_id', $shopId)
+        ->where('status', 1)
+        ->orderBy('created_at', 'desc')
+        ->paginate(1);
+
+        return view('checkorder.main', compact('orders'));
+    }
 
 
 

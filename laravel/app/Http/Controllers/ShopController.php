@@ -14,6 +14,7 @@ class ShopController extends Controller
 {
     public function create()
     {
+        session(['showNavigation' => true]);
         $menus = Menu::all();
         return view('shop.form', compact('menus'));
     }

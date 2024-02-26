@@ -22,4 +22,9 @@ class OrderMenu extends Model
     {
         return $this->belongsTo(NoticeMenu::class, 'notice_menu_id');
     }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }
