@@ -8,5 +8,6 @@
     "/js/option.js": "/js/option.js",
     "/js/order-handler.js": "/js/order-handler.js",
     "/js/orderMain.js": "/js/orderMain.js",
+    "/js/welcome.js": "/js/welcome.js",
     "/css/app.css": "/css/app.css"
 }

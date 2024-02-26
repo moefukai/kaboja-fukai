@@ -23,8 +23,10 @@
 <body>
 @section('header')
     <header>
-        <h1 class="logo">Kaboja</h1>
-        @if(session('showNavigation', true))
+        <div class="logo">
+            <img src="{{ asset('images/logo.png') }}" alt="Kaboja Logo" style="height: 50px; width: auto;">
+        </div>
+        @if(session('showNavigation', false))
         <div class="drawer">
             <input type="checkbox" name="navToggle" id="navToggle" class="nav-toggle">
             <label for="navToggle" class="btn-burger">
@@ -121,7 +123,7 @@
     header {
         position: relative;
         padding: 15px 0 0 0px;
-        background-color: #fff;
+        background-color: #FFB950;
     }
     .btn-burger {
         cursor: pointer;

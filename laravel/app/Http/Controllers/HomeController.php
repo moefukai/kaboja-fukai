@@ -25,7 +25,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        session(['showNavigation' => false]);
         return view('auth.login');
     }
 //    public function login()

@@ -27,7 +27,6 @@ class OrderController extends Controller
     }
     public function create(Request $request, $shopId)
     {
-        // ナビゲーションを非表示にするためのセッション設定を追加
         session(['showNavigation' => false]);
 
         $latestNotice = Notice::where('shop_id', $shopId)->latest('created_at')->first();

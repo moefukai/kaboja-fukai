@@ -9,6 +9,17 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
+        .info2 {
+            background-color: #FFF;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+            border: solid 1px #5C9757;
+            color: #5C9757;
+        }
+
         /*.container {*/
         /*    background-color: #FDF7EE;*/
         /*    padding: 20px;*/
@@ -68,69 +79,65 @@
             box-shadow: 0 0 0 2px #F6AE2C;
         }
 
-        a {
+        .new-account {
             margin-top: 20px;
         }
 
     </style>
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="container">
-                            <div class="container-texts">
-                                <h1>ログイン</h1>
-                                <div class="info">
-                                        <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('メールアドレス') }}</label>
-                                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                                            @error('email')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード') }}</label>
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="container">
+                    <div class="container-texts">
+                        <h1>ログイン</h1>
+                        <div class="info">
+                                <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('メールアドレス') }}</label>
+                                    <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    @error('email')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード') }}</label>
+                                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                    @error('password')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
 
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード（確認用）') }}</label>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                                    @if (Route::has('password.request'))
-                                        <a class="btn btn-link" href="{{ route('password.request') }}">
-                                            {{ __('パスワードを忘れた場合') }}
-                                        </a>
-                                    @endif
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード（確認用）') }}</label>
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                            @if (Route::has('password.request'))
+                                <a class="btn btn-link" href="{{ route('password.request') }}">
+                                    {{ __('パスワードを忘れた場合') }}
+                                </a>
+                            @endif
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
 
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('ログイン情報を記憶する') }}
-                                    </label>
-                                </div>
-
-                                <div class="register">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('ログイン') }}
-                                    </button>
-                                </div>
-                                    </div>
-                                </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="remember">
+                                {{ __('ログイン情報を記憶する') }}
+                            </label>
                         </div>
-                    </form>
-            <span class="btn btn-lg" style="background-color: #5C9757; color: white; margin-bottom: 20px; padding: 10px 30px; font-size: 18px; cursor: not-allowed; opacity: 0.5;">新規登録はこちらから</span>
-        </div>
-                <div class="">
+
+                        <div class="register">
+                            <button type="submit" class="btn btn-primary">
+                                {{ __('ログイン') }}
+                            </button>
+                        </div>
+                            </div>
+                        </div>
+                    <div class="info2">
+                        <span class="new-account">新規登録はこちらから</span>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 @endsection
