@@ -62,3 +62,17 @@ Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('
     Route::get('/check-order/to-serve', [OrderController::class, 'showToServe'])->name('to.serve.show');
     Route::get('/check-order/history', [OrderController::class, 'showToHistory'])->name('history.show');
 
+    //// Twitterに投稿するルート
+    //Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');
+    // テスト投稿フォームを表示するためのルート
+    Route::get('/twitter-test', function () {
+        return view('twitter.twitter-test');
+    });
+    Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
+    Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('post.tweet');
+
+    //セッション管理
+    Route::post('/save-notice-menu-id', [OrderController::class, 'saveNoticeMenuId']);
+
+    // Auth routes
+    require __DIR__.'/auth.php';
