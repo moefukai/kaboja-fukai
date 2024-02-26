@@ -1,19 +1,16 @@
 @if ($paginator->hasPages())
     <style>
         .pagination a {
-            /* アクティブなリンクのスタイル */
             background-color: #F6AE2C;
             color: white;
             border-color: #F6AE2C;
         }
 
         .pagination a:hover {
-            /* ホバー時のスタイル */
-            background-color: #db9b1c; /* #F6AE2Cより少し暗めの色 */
+            background-color: #db9b1c;
         }
 
         .pagination span {
-            /* 非アクティブなリンクのスタイル */
             pointer-events: none;
         }
     </style>

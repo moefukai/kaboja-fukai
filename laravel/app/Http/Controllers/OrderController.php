@@ -176,9 +176,26 @@ class OrderController extends Controller
 
         return view('checkorder.main', compact('orders'));
     }
+    public function updateStatus(Request $request, Order $order)
+    {
+        $statusMapping = [
+            1 => 2,
+            2 => 3,
+        ];
+        $nextStatus = isset($statusMapping[$order->status]) ? $statusMapping[$order->status] : $order->status;
+        $order->update(['status' => $nextStatus]);
+        return redirect()->back()->with('message', 'Order status updated successfully.');
+    }
 
-
-
+    public function showToServe(Request $request)
+    {
+        $shopId = Auth::user()->shop->id;
+        $orders = Order::where('shop_id', $shopId)
+            ->where('status', 2)
+            ->orderBy('created_at', 'desc')
+            ->paginate(1);
+        return view('checkorder.toserve', compact('orders'));
+    }
 //    public function showVisitorInfo()
 //    {
 //        return view('order.visitor.show');

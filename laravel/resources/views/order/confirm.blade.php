@@ -51,9 +51,9 @@
             color: #fff;
             cursor: pointer;
             margin-top: 20px;
-            white-space: nowrap; /* テキストが折り返されないように設定 */
-            overflow: hidden; /* はみ出した内容を非表示に */
-            text-overflow: ellipsis; /* はみ出したテキストを省略記号で表示 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .peer:focus + .peer-focused-custom {
