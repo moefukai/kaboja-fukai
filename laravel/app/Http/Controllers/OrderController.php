@@ -166,6 +166,7 @@ class OrderController extends Controller
 
     public function checkOrder(Request $request)
     {
+        session(['showNavigation' => true]);
 
         $shopId = Auth::user()->shop->id;
         $orders = Order::where('shop_id', $shopId)

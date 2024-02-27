@@ -134,7 +134,7 @@
                             </div>
                         </div>
                     <div class="info2">
-                        <span class="new-account">新規登録はこちらから</span>
+                        <a href="/register" class="new-account">新規登録はこちらから</a>
                     </div>
                 </div>
             </form>

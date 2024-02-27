@@ -23,8 +23,8 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-//Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-//Route::post('/register', [RegisterController::class, 'register']);
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/order/main/{shop_id}', [OrderController::class, 'create'])->name('order.main');
 Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'showDetail'])->name('order.detail.show');
