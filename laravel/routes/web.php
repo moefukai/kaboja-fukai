@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+if (env("APP_DEBUG")) {
+    Route::get('/test', function () {
+        return view('test');
+    });
+}
+
 // Auth routes
 require __DIR__.'/auth.php';
 
