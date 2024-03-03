@@ -168,7 +168,7 @@ class OrderController extends Controller
     {
         session(['showNavigation' => true]);
 
-        $shopId = Auth::user()->shop->id;
+        $shopId = Auth::user()->shop()->id;
         $orders = Order::where('shop_id', $shopId)
         ->where('status', 1)
         ->orderBy('created_at', 'desc')
