@@ -18,7 +18,7 @@ Route::get('/', function () {
 if (env("APP_DEBUG")) {
     Route::get('/test', function () {
         return view('test');
-    });
+    })->name('local-test');
 }
 
 // Auth routes
@@ -44,6 +44,8 @@ Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('
 ////    Route::get('/dashboard', function () {
 ////        return view('dashboard');
 ////    })->name('dashboard');
+
+Route::middleware(['auth.user'])->group(function () {
 
     // Notice
     Route::get('/notice', [NoticeController::class, 'create'])->name('notice.create');
@@ -76,6 +78,8 @@ Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('
     });
     Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
     Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('post.tweet');
+
+});
 
     //セッション管理
     Route::post('/save-notice-menu-id', [OrderController::class, 'saveNoticeMenuId']);
