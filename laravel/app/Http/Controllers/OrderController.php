@@ -145,7 +145,17 @@ class OrderController extends Controller
         $note = $order->note ?? 'なし';
         $shopId = $order->shop_id;
 
-        return view('order.confirm', compact('order', 'noticeMenu', 'discountedPrice', 'selectedOptions', 'totalPrice', 'visitingTime', 'tell', 'note', 'shopId'));
+        return view('order.confirm', compact(
+            'order',
+            'noticeMenu',
+            'discountedPrice',
+            'selectedOptions',
+            'totalPrice',
+            'visitingTime',
+            'tell',
+            'note',
+            'shopId'
+        ));
     }
     public function final(Request $request, $orderId)
     {

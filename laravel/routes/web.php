@@ -22,7 +22,7 @@ if (env("APP_DEBUG")) {
 }
 
 // Auth routes
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::get('/', function () {
     return view('welcome');
@@ -78,11 +78,10 @@ Route::middleware(['auth.user'])->group(function () {
     });
     Route::post('/tweet', [TwitterTestController::class, 'postTweet']);
     Route::post('/post-tweet', [TwitterTestController::class, 'postTweet'])->name('post.tweet');
-
 });
 
     //セッション管理
     Route::post('/save-notice-menu-id', [OrderController::class, 'saveNoticeMenuId']);
 
     // Auth routes
-    require __DIR__.'/auth.php';
+    require __DIR__ . '/auth.php';
