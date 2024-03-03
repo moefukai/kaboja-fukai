@@ -145,7 +145,17 @@ class OrderController extends Controller
         $note = $order->note ?? 'なし';
         $shopId = $order->shop_id;
 
-        return view('order.confirm', compact('order', 'noticeMenu', 'discountedPrice', 'selectedOptions', 'totalPrice', 'visitingTime', 'tell', 'note', 'shopId'));
+        return view('order.confirm', compact(
+            'order',
+            'noticeMenu',
+            'discountedPrice',
+            'selectedOptions',
+            'totalPrice',
+            'visitingTime',
+            'tell',
+            'note',
+            'shopId'
+        ));
     }
     public function final(Request $request, $orderId)
     {
@@ -168,7 +178,7 @@ class OrderController extends Controller
     {
         session(['showNavigation' => true]);
 
-        $shopId = Auth::user()->shop->id;
+        $shopId = Auth::user()->shop()->id;
         $orders = Order::where('shop_id', $shopId)
         ->where('status', 1)
         ->orderBy('created_at', 'desc')

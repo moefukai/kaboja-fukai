@@ -14,6 +14,5 @@ class Menu extends Model
     public function toppings()
     {
         return $this->belongsToMany(Topping::class, 'menu_toppings');
-
     }
 }

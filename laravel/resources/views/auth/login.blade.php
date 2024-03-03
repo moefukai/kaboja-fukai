@@ -106,8 +106,7 @@
                                         </span>
                                     @enderror
 
-                    <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード（確認用）') }}</label>
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+
                             @if (Route::has('password.request'))
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
                                     {{ __('パスワードを忘れた場合') }}
