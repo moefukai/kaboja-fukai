@@ -37,7 +37,7 @@ Route::get('/order/detail/{noticeMenuId}', [OrderController::class, 'showDetail'
 Route::post('/order/detail/store', [OrderController::class, 'storeDetail'])->name('order.detail.store');
 Route::get('/order/confirm/{orderId}', [OrderController::class, 'confirm'])->name('order.confirm');
 Route::get('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
-Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final');
+Route::post('/order/final/{orderId}', [OrderController::class, 'final'])->name('order.final-post');
 
 // 以下のルートはログインユーザーのみアクセス可能
 //Route::middleware(['auth'])->group(function () {
@@ -52,7 +52,7 @@ Route::middleware(['auth.user'])->group(function () {
     Route::post('/notice', [NoticeController::class, 'store'])->name('notice.store');
     Route::get('/notice/confirm/{id}', [NoticeController::class, 'show'])->name('notice.confirm');
     Route::get('/notice/final', [TwitterTestController::class, 'final'])->name('notice.final');
-    Route::post('/notice/final', [TwitterTestController::class, 'final'])->name('notice.final');
+    Route::post('/notice/final', [TwitterTestController::class, 'final'])->name('notice.final-post');
 
     // Shop
     Route::get('/shop', [ShopController::class, 'create'])->name('shops.create');
