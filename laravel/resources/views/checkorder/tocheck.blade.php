@@ -67,9 +67,8 @@
         }
 
         .tab {
-            /* タブの基本スタイル */
-            display: inline-block; /* タブをインラインブロック要素として配置 */
-            padding: 8px 16px; /* タブ内のパディング */
+            display: inline-block;
+            padding: 8px 16px;
             border-bottom: 2px solid transparent; /* 非アクティブタブのボーダー */
             text-decoration: none; /* テキストの下線を除去 */
             color: #6B7280; /* 非アクティブタブのテキストカラー */

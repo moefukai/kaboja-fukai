@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: ./infra/docker/development/mysql/Dockerfile
     ports:
-      - "43306:3306"
+      - "43307:3306"
     volumes:
       - db-store:/var/lib/mysql
       - ./infra/docker/development/mysql/init:/docker-entrypoint-initdb.d

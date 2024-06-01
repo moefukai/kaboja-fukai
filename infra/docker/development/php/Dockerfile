@@ -26,7 +26,7 @@ COPY ./infra/docker/production/php/php.ini /usr/local/etc/php/php.ini
 COPY ./laravel /work/laravel
 
 # こことか特にプロジェクトごとに違うと思う.
-COPY ./laravel/.env /work/laravel/.env
+#COPY ./laravel/.env /work/laravel/.env
 
 WORKDIR /work/laravel
 
