@@ -59,7 +59,7 @@ return [
             'url' => "https://hooks.slack.com/services/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",
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => env('LOG_LEVEL', 'critical'),
+            'level' => env('LOG_LEVEL', 'info'),
         ],
 
         'papertrail' => [
