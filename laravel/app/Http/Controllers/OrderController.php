@@ -178,7 +178,7 @@ class OrderController extends Controller
     {
         session(['showNavigation' => true]);
 
-        $shopId = Auth::user()->shop()->id;
+        $shopId = Auth::user()->shop->id;
         $orders = Order::where('shop_id', $shopId)
         ->where('status', 1)
         ->orderBy('created_at', 'desc')
@@ -205,6 +205,17 @@ class OrderController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(1);
         return view('checkorder.toserve', compact('orders'));
+    }
+
+    public function showToHistory(Request $request)
+    {
+        $shopId = Auth::user()->shop_id;
+        $orders = Order::where('shop_id', $shopId)
+            ->where('status', 3)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('checkorder.history', compact('orders'));
     }
 //    public function showVisitorInfo()
 //    {

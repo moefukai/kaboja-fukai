@@ -102,7 +102,7 @@
                     <nav class="tabs-nav">
                         <a href="{{ route('to.check.show') }}" class="{{ request()->routeIs('to.check.show') ? 'tab-active' : 'tab' }}">確認待ち</a>
                         <a href="{{ route('to.serve.show') }}" class="{{ request()->routeIs('to.serve.show') ? 'tab-active' : 'tab' }}">受け渡し待ち</a>
-                        <a href="{{ route('history.show') }}" class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</a>
+{{--                        <a href="{{ route('history.show') }}" class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</a>--}}
                     </nav>
                 </div>
             </div>
