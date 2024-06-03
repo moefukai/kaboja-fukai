@@ -106,41 +106,41 @@
                     <nav class="tabs-nav">
                         <a href="{{ route('check.order.show') }}" class="{{ request()->routeIs('check.order.show') ? 'tab-active' : 'tab' }}">確認待ち</a>
                         <a href="{{ route('to.serve.show') }}" class="{{ request()->routeIs('to.serve.show') ? 'tab-active' : 'tab' }}">受け渡し待ち</a>
-                        <span class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</span>
+                        <a href="{{ route('history.show') }}" class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</a>
                     </nav>
                 </div>
             </div>
             <div class="info">
-                @foreach ($orders as $order)
-                    <p>予約番号: {{ $order->id }}</p>
-                    @foreach ($order->orderMenus as $orderMenu)
-                        @if ($orderMenu->noticeMenu && $orderMenu->noticeMenu->menu)
-                            <p>【メニュー名】{{ $orderMenu->noticeMenu->menu->name }}</p>
+                @forelse ($orders as $order)
+                    <div class="order-detail">
+                        <p>予約番号: {{ $order->id }}</p>
+                        @foreach ($order->orderMenus as $orderMenu)
+                            <p>【メニュー名】{{ $orderMenu->noticeMenu->menu->name ?? 'メニュー名不明' }}</p>
                             <p>【オプション】</p>
-                            <ul>
-                                @foreach ($orderMenu->orderOptions as $orderOption)
-                                    @if ($orderOption->option)
-                                        <li>{{ $orderOption->option->name }}</li>
-                                    @else
-                                        <li>なし</li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        @else
-                            <p>メニューが関連付けられていません。</p>
-                        @endif
-                    @endforeach
-                    <p>【合計金額】{{ number_format($order->total_price) }}円</p>
-                    <p>【来店時間】{{ \Carbon\Carbon::parse($order->visiting_time)->format('m月d日H時i分') }}</p>
-                    <p>【お客様の電話番号】{{ $order->tell }}</p>
-                    <p>【備考】{{ $order->note }}</p>
-                @endforeach
-                <div class="register">
-                    <form action="{{ route('order.updateStatus', $order->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary">受け渡し済みにする</button>
-                    </form>
-                </div>
+                            @if($orderMenu->orderOptions->isEmpty())
+                                <p>オプションなし</p>
+                            @else
+                                <ul>
+                                    @foreach ($orderMenu->orderOptions as $orderOption)
+                                        <li>{{ $orderOption->option->name ?? 'オプション情報不明' }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        @endforeach
+                        <p>【合計金額】{{ number_format($order->total_price) }}円</p>
+                        <p>【来店時間】{{ \Carbon\Carbon::parse($order->visiting_time)->format('m月d日H時i分') }}</p>
+                        <p>【お客様の電話番号】{{ $order->tell }}</p>
+                        <p>【備考】{{ $order->note }}</p>
+                    </div>
+                    <div class="register">
+                        <form action="{{ route('order.updateStatus', $order->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">受け渡し済みにする</button>
+                        </form>
+                    </div>
+                @empty
+                    <p>表示する注文がありません。</p>
+                @endforelse
                 <div class="container mx-auto px-4">
                     {{ $orders->links('components.custom-pagenation') }}
                 </div>
