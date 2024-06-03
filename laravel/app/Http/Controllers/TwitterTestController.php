@@ -20,7 +20,7 @@ class TwitterTestController extends Controller
                 "価格: ¥" . number_format($menu['price'] - $menu['discount']) . "\n";
         }
         $tweetText .= "販売時間:" . $request->input('start_time') . " - " . $request->input('end_time');
-        $tweetText .= "\n注文はこちらから！" . "http://127.0.0.1:48080/order/main/1" . $request->input('shop_id');
+        $tweetText .= "\n注文はこちらから！" . "https://xs096086.xsrv.jp/order/main/1" . $request->input('shop_id');
         $tweetText .= "\n#西新宿 #ランチ難民 #キッチンカー";
 
         $twitter = new TwitterOAuth(
