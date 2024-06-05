@@ -100,13 +100,13 @@
     </style>
     <div class="container">
         <div class="container-texts">
-            <h1>注文確認</h1>
+            <h1>オーダー確認</h1>
             <div class="mt-3 sm:mt-4">
                 <div class="tabs-container">
                     <nav class="tabs-nav">
                         <a href="{{ route('check.order.show') }}" class="{{ request()->routeIs('check.order.show') ? 'tab-active' : 'tab' }}">確認待ち</a>
                         <a href="{{ route('to.serve.show') }}" class="{{ request()->routeIs('to.serve.show') ? 'tab-active' : 'tab' }}">受け渡し待ち</a>
-                        <span class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</span>
+{{--                        <a class="{{ request()->routeIs('history.show') ? 'tab-active' : 'tab' }}">注文履歴一覧</a>--}}
                     </nav>
                 </div>
             </div>
