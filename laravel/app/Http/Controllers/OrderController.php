@@ -207,16 +207,16 @@ class OrderController extends Controller
         return view('checkorder.toserve', compact('orders'));
     }
 
-    public function showToHistory(Request $request)
-    {
-        $shopId = Auth::user()->shop_id;
-        $orders = Order::where('shop_id', $shopId)
-            ->where('status', 3)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return view('checkorder.history', compact('orders'));
-    }
+//    public function showToHistory(Request $request)
+//    {
+//        $shopId = Auth::user()->shop_id;
+//        $orders = Order::where('shop_id', $shopId)
+//            ->where('status', 3)
+//            ->orderBy('created_at', 'desc')
+//            ->paginate(10);
+//
+//        return view('checkorder.history', compact('orders'));
+//    }
 //    public function showVisitorInfo()
 //    {
 //        return view('order.visitor.show');
