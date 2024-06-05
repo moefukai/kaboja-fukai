@@ -68,7 +68,7 @@ Route::middleware(['auth.user'])->group(function () {
     Route::post('/order/update-status/{order}', [OrderController::class, 'updateStatus'])->name('order.updateStatus');
 //    Route::get('/check-order/to-check', [OrderController::class, 'showToCheck'])->name('to.check.show');
     Route::get('/check-order/to-serve', [OrderController::class, 'showToServe'])->name('to.serve.show');
-    Route::get('/check-order/history', [OrderController::class, 'showToHistory'])->name('history.show');
+//    Route::get('/check-order/history', [OrderController::class, 'showToHistory'])->name('history.show');
 
     //// Twitterに投稿するルート
     //Route::post('/post-tweet', [TwitterController::class, 'postTweet'])->name('post.tweet');
